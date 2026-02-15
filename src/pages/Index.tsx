@@ -6,9 +6,12 @@ import PortfolioSection from "@/components/PortfolioSection";
 import TestimonialsSection from "@/components/TestimonialsSection";
 import ContactSection from "@/components/ContactSection";
 import Footer from "@/components/Footer";
+import ScrollProgress from "@/components/ScrollProgress";
+import WhatsAppButton from "@/components/WhatsAppButton";
 
 const Index = () => (
   <main className="min-h-screen">
+    <ScrollProgress />
     <Navbar />
     <HeroSection />
     <AboutSection />
@@ -17,6 +20,7 @@ const Index = () => (
     <TestimonialsSection />
     <ContactSection />
     <Footer />
+    <WhatsAppButton />
   </main>
 );
 

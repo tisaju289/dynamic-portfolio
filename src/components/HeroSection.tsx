@@ -1,16 +1,34 @@
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
+import { useState, useEffect } from "react";
+import { Download } from "lucide-react";
 import heroImage from "@/assets/mk-kopil.png";
 import illustratorLogo from "@/assets/icons/illustrator.png";
 import photoshopLogo from "@/assets/icons/photoshop.png";
 import behanceLogo from "@/assets/icons/behance.png";
 
 const floatingIcons = [
-  { img: illustratorLogo, label: "Illustrator", x: -40, y: 30, delay: 0 },
-  { img: photoshopLogo, label: "Photoshop", x: 40, y: -20, delay: 0.3 },
-  { img: behanceLogo, label: "Behance", x: -30, y: -60, delay: 0.6 },
+  { img: illustratorLogo, label: "Illustrator", delay: 0 },
+  { img: photoshopLogo, label: "Photoshop", delay: 0.3 },
+  { img: behanceLogo, label: "Behance", delay: 0.6 },
+];
+
+const roles = [
+  "গ্রাফিক্স ডিজাইনার",
+  "লোগো ডিজাইনার",
+  "ব্র্যান্ড এক্সপার্ট",
+  "ক্রিয়েটিভ আর্টিস্ট",
 ];
 
 const HeroSection = () => {
+  const [roleIndex, setRoleIndex] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setRoleIndex((prev) => (prev + 1) % roles.length);
+    }, 2500);
+    return () => clearInterval(interval);
+  }, []);
+
   const scrollTo = (id: string) => {
     document.querySelector(id)?.scrollIntoView({ behavior: "smooth" });
   };
@@ -30,7 +48,21 @@ const HeroSection = () => {
               আমি{" "}
               <span className="gradient-text">MK Kopil</span>
               <br />
-              একজন পেশাদার গ্রাফিক্স ডিজাইনার
+              একজন পেশাদার{" "}
+              <span className="relative inline-block min-w-[200px] md:min-w-[280px]">
+                <AnimatePresence mode="wait">
+                  <motion.span
+                    key={roleIndex}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -20 }}
+                    transition={{ duration: 0.4, ease: "easeOut" }}
+                    className="gradient-text inline-block"
+                  >
+                    {roles[roleIndex]}
+                  </motion.span>
+                </AnimatePresence>
+              </span>
             </h1>
             <p className="text-lg md:text-xl text-muted-foreground mb-8 max-w-lg mx-auto leading-relaxed">
               লোগো ডিজাইন, ব্র্যান্ডিং, সোশ্যাল মিডিয়া ক্রিয়েটিভ ও প্রিন্ট ডিজাইনে অভিজ্ঞ। আপনার ব্র্যান্ডকে ভিজ্যুয়ালভাবে আলাদা করে তুলতে আমি প্রস্তুত।
@@ -48,6 +80,14 @@ const HeroSection = () => {
               >
                 যোগাযোগ করুন
               </button>
+              <a
+                href="/mk-kopil-cv.pdf"
+                download
+                className="flex items-center gap-2 border border-accent/30 text-accent px-6 py-3 rounded-lg font-semibold hover:bg-accent/10 transition-all duration-200 active:scale-95"
+              >
+                <Download className="w-4 h-4" />
+                CV ডাউনলোড
+              </a>
             </div>
           </motion.div>
 
