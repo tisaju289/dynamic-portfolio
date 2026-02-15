@@ -9,7 +9,7 @@ const HeroSection = () => {
   return (
     <section id="home" className="min-h-screen flex items-center pt-20 pb-16">
       <div className="container mx-auto px-4">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center text-center lg:text-left">
           {/* Text */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -23,7 +23,7 @@ const HeroSection = () => {
               <br />
               একজন পেশাদার গ্রাফিক্স ডিজাইনার
             </h1>
-            <p className="text-lg md:text-xl text-muted-foreground mb-8 max-w-lg leading-relaxed">
+            <p className="text-lg md:text-xl text-muted-foreground mb-8 max-w-lg mx-auto lg:mx-0 leading-relaxed">
               লোগো ডিজাইন, ব্র্যান্ডিং, সোশ্যাল মিডিয়া ক্রিয়েটিভ ও প্রিন্ট ডিজাইনে অভিজ্ঞ। আপনার ব্র্যান্ডকে ভিজ্যুয়ালভাবে আলাদা করে তুলতে আমি প্রস্তুত।
             </p>
             <div className="flex flex-wrap gap-4">
