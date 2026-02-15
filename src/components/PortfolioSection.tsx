@@ -1,5 +1,6 @@
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
+import { X } from "lucide-react";
 import alifClothing from "@/assets/portfolio/alif-clothing.png";
 import rareZone from "@/assets/portfolio/rare-zone.jpg";
 import uddoktaDigital from "@/assets/portfolio/uddokta-digital.png";
@@ -20,6 +21,7 @@ const projects = [
 
 const PortfolioSection = () => {
   const [active, setActive] = useState("সকল");
+  const [selectedProject, setSelectedProject] = useState<typeof projects[0] | null>(null);
   const filtered = active === "সকল" ? projects : projects.filter((p) => p.category === active);
 
   return (
@@ -65,6 +67,7 @@ const PortfolioSection = () => {
               viewport={{ once: true }}
               transition={{ delay: i * 0.08, duration: 0.4 }}
               layout
+              onClick={() => setSelectedProject(p)}
               className="glass rounded-2xl overflow-hidden group cursor-pointer hover:-translate-y-1 hover:shadow-xl transition-all duration-200"
             >
               <div className="aspect-square bg-muted overflow-hidden">
@@ -84,6 +87,45 @@ const PortfolioSection = () => {
           ))}
         </div>
       </div>
+
+      {/* Lightbox Modal */}
+      <AnimatePresence>
+        {selectedProject && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[100] flex items-center justify-center bg-background/80 backdrop-blur-md p-4"
+            onClick={() => setSelectedProject(null)}
+          >
+            <motion.div
+              initial={{ scale: 0.85, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.85, opacity: 0 }}
+              transition={{ duration: 0.3, ease: "easeOut" }}
+              className="relative max-w-3xl w-full glass rounded-2xl overflow-hidden shadow-2xl"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <button
+                onClick={() => setSelectedProject(null)}
+                className="absolute top-4 right-4 z-10 w-10 h-10 rounded-full bg-background/80 backdrop-blur-sm flex items-center justify-center text-foreground hover:bg-background transition-colors"
+              >
+                <X className="w-5 h-5" />
+              </button>
+              <img
+                src={selectedProject.image}
+                alt={selectedProject.title}
+                className="w-full max-h-[60vh] object-contain bg-muted"
+              />
+              <div className="p-6">
+                <span className="text-xs font-medium text-primary mb-1 block">{selectedProject.category}</span>
+                <h3 className="text-xl font-bold mb-2">{selectedProject.title}</h3>
+                <p className="text-muted-foreground">{selectedProject.description}</p>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </section>
   );
 };
