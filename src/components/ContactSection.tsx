@@ -39,6 +39,9 @@ const ContactSection = () => {
             <span className="gradient-text">যোগাযোগ</span> করুন
           </h2>
           <p className="text-muted-foreground text-lg">আপনার প্রজেক্ট নিয়ে আলোচনা করতে চাইলে মেসেজ করুন</p>
+          <p className="text-muted-foreground mt-2">
+            ইমেইল: <a href="mailto:contact.mkkopil@gmail.com" className="text-primary hover:underline">contact.mkkopil@gmail.com</a>
+          </p>
         </motion.div>
 
         {submitted ? (
