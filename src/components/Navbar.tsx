@@ -7,7 +7,7 @@ const navItems = [
   { label: "আমার সম্পর্কে", href: "#about" },
   { label: "সেবাসমূহ", href: "#services" },
   { label: "আমার কাজসমূহ", href: "#portfolio" },
-  { label: "ক্লায়েন্ট মতামত", href: "#testimonials" },
+  
   { label: "যোগাযোগ", href: "#contact" },
 ];
 
