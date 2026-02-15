@@ -26,7 +26,7 @@ const HeroSection = () => {
             <p className="text-lg md:text-xl text-muted-foreground mb-8 max-w-lg mx-auto lg:mx-0 leading-relaxed">
               লোগো ডিজাইন, ব্র্যান্ডিং, সোশ্যাল মিডিয়া ক্রিয়েটিভ ও প্রিন্ট ডিজাইনে অভিজ্ঞ। আপনার ব্র্যান্ডকে ভিজ্যুয়ালভাবে আলাদা করে তুলতে আমি প্রস্তুত।
             </p>
-            <div className="flex flex-wrap gap-4">
+            <div className="flex flex-wrap gap-4 justify-center lg:justify-start">
               <button
                 onClick={() => scrollTo("#portfolio")}
                 className="gradient-bg text-primary-foreground px-8 py-3 rounded-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-200 hover:-translate-y-0.5 active:scale-95"
