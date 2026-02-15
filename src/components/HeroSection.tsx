@@ -1,5 +1,12 @@
 import { motion } from "framer-motion";
 import heroImage from "@/assets/mk-kopil.png";
+import { Palette, PenTool, Globe } from "lucide-react";
+
+const floatingIcons = [
+  { icon: PenTool, label: "Illustrator", color: "from-orange-500 to-amber-500", x: -40, y: 30, delay: 0 },
+  { icon: Palette, label: "Photoshop", color: "from-blue-500 to-cyan-400", x: 40, y: -20, delay: 0.3 },
+  { icon: Globe, label: "Behance", color: "from-blue-600 to-indigo-500", x: -30, y: -60, delay: 0.6 },
+];
 
 const HeroSection = () => {
   const scrollTo = (id: string) => {
@@ -59,6 +66,34 @@ const HeroSection = () => {
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-foreground/20 to-transparent" />
               </div>
+
+              {/* Floating tool icons */}
+              {floatingIcons.map((item, i) => (
+                <motion.div
+                  key={item.label}
+                  initial={{ opacity: 0, scale: 0 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ delay: 0.6 + item.delay, duration: 0.4, ease: "backOut" }}
+                  className="absolute"
+                  style={{
+                    right: i === 0 ? "auto" : i === 1 ? "-16px" : "auto",
+                    left: i === 0 ? "-16px" : i === 2 ? "10%" : "auto",
+                    top: i === 1 ? "10%" : i === 2 ? "-12px" : "auto",
+                    bottom: i === 0 ? "15%" : "auto",
+                  }}
+                >
+                  <motion.div
+                    animate={{ y: [0, -8, 0] }}
+                    transition={{ duration: 3, repeat: Infinity, delay: item.delay, ease: "easeInOut" }}
+                    className={`w-12 h-12 md:w-14 md:h-14 rounded-xl bg-gradient-to-br ${item.color} shadow-lg flex items-center justify-center`}
+                  >
+                    <item.icon className="w-6 h-6 md:w-7 md:h-7 text-white" />
+                  </motion.div>
+                  <p className="text-[10px] md:text-xs text-muted-foreground text-center mt-1 font-medium">
+                    {item.label}
+                  </p>
+                </motion.div>
+              ))}
             </div>
           </motion.div>
         </div>
