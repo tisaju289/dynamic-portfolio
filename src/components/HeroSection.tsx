@@ -15,7 +15,7 @@ const HeroSection = () => {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, ease: "easeOut" }}
-            className="order-1"
+            className="order-2 lg:order-1"
           >
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold leading-tight mb-6">
               আমি{" "}
@@ -47,7 +47,7 @@ const HeroSection = () => {
             initial={{ opacity: 0, x: 40 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
-            className="order-2 flex justify-center lg:justify-end"
+            className="order-1 lg:order-2 flex justify-center lg:justify-end"
           >
             <div className="relative w-72 h-72 md:w-96 md:h-96 lg:w-[28rem] lg:h-[28rem]">
               <div className="absolute inset-0 gradient-bg rounded-3xl rotate-6 opacity-20" />
