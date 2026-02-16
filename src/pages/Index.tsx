@@ -1,3 +1,4 @@
+import { LanguageProvider } from "@/context/LanguageContext";
 import Navbar from "@/components/Navbar";
 import HeroSection from "@/components/HeroSection";
 import AboutSection from "@/components/AboutSection";
@@ -10,18 +11,20 @@ import ScrollProgress from "@/components/ScrollProgress";
 import WhatsAppButton from "@/components/WhatsAppButton";
 
 const Index = () => (
-  <main className="min-h-screen">
-    <ScrollProgress />
-    <Navbar />
-    <HeroSection />
-    <AboutSection />
-    <ServicesSection />
-    <PortfolioSection />
-    <TestimonialsSection />
-    <ContactSection />
-    <Footer />
-    <WhatsAppButton />
-  </main>
+  <LanguageProvider>
+    <main className="min-h-screen">
+      <ScrollProgress />
+      <Navbar />
+      <HeroSection />
+      <AboutSection />
+      <ServicesSection />
+      <PortfolioSection />
+      <TestimonialsSection />
+      <ContactSection />
+      <Footer />
+      <WhatsAppButton />
+    </main>
+  </LanguageProvider>
 );
 
 export default Index;

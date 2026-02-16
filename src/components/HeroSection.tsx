@@ -4,29 +4,30 @@ import { Download } from "lucide-react";
 import heroImage from "@/assets/mk-kopil.png";
 import illustratorLogo from "@/assets/icons/illustrator.png";
 import photoshopLogo from "@/assets/icons/photoshop.png";
-
+import { useLang } from "@/context/LanguageContext";
 
 const floatingIcons = [
   { img: illustratorLogo, label: "Illustrator", delay: 0 },
   { img: photoshopLogo, label: "Photoshop", delay: 0.3 },
 ];
 
-const roles = [
-  "গ্রাফিক্স ডিজাইনার",
-  "লোগো ডিজাইনার",
-  "ব্র্যান্ড এক্সপার্ট",
-  "ক্রিয়েটিভ আর্টিস্ট",
-];
-
 const HeroSection = () => {
+  const { t } = useLang();
   const [roleIndex, setRoleIndex] = useState(0);
+
+  const roles = [
+    t("গ্রাফিক্স ডিজাইনার", "Graphics Designer"),
+    t("লোগো ডিজাইনার", "Logo Designer"),
+    t("ব্র্যান্ড এক্সপার্ট", "Brand Expert"),
+    t("ক্রিয়েটিভ আর্টিস্ট", "Creative Artist"),
+  ];
 
   useEffect(() => {
     const interval = setInterval(() => {
       setRoleIndex((prev) => (prev + 1) % roles.length);
     }, 2500);
     return () => clearInterval(interval);
-  }, []);
+  }, [roles.length]);
 
   const scrollTo = (id: string) => {
     document.querySelector(id)?.scrollIntoView({ behavior: "smooth" });
@@ -44,10 +45,10 @@ const HeroSection = () => {
             className="order-2 lg:order-1 flex flex-col items-center"
           >
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold leading-tight mb-6">
-              আমি{" "}
+              {t("আমি", "I'm")}{" "}
               <span className="gradient-text">MK Kopil</span>
               <br />
-              একজন পেশাদার{" "}
+              {t("একজন পেশাদার", "A Professional")}{" "}
               <span className="relative inline-block min-w-[200px] md:min-w-[280px]">
                 <AnimatePresence mode="wait">
                   <motion.span
@@ -64,20 +65,23 @@ const HeroSection = () => {
               </span>
             </h1>
             <p className="text-lg md:text-xl text-muted-foreground mb-8 max-w-lg mx-auto leading-relaxed">
-              লোগো ডিজাইন, ব্র্যান্ডিং, সোশ্যাল মিডিয়া ক্রিয়েটিভ ও প্রিন্ট ডিজাইনে অভিজ্ঞ। আপনার ব্র্যান্ডকে ভিজ্যুয়ালভাবে আলাদা করে তুলতে আমি প্রস্তুত।
+              {t(
+                "লোগো ডিজাইন, ব্র্যান্ডিং, সোশ্যাল মিডিয়া ক্রিয়েটিভ ও প্রিন্ট ডিজাইনে অভিজ্ঞ। আপনার ব্র্যান্ডকে ভিজ্যুয়ালভাবে আলাদা করে তুলতে আমি প্রস্তুত।",
+                "Experienced in logo design, branding, social media creatives & print design. I'm ready to make your brand visually stand out."
+              )}
             </p>
             <div className="flex flex-wrap gap-4 justify-center">
               <button
                 onClick={() => scrollTo("#portfolio")}
                 className="gradient-bg text-primary-foreground px-8 py-3 rounded-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-200 hover:-translate-y-0.5 active:scale-95"
               >
-                আমার কাজ দেখুন
+                {t("আমার কাজ দেখুন", "View My Work")}
               </button>
               <button
                 onClick={() => scrollTo("#contact")}
                 className="border border-primary/30 text-foreground px-8 py-3 rounded-lg font-semibold hover:bg-primary/5 transition-all duration-200 active:scale-95"
               >
-                যোগাযোগ করুন
+                {t("যোগাযোগ করুন", "Contact Me")}
               </button>
               <a
                 href="/mk-kopil-cv.pdf"
@@ -85,7 +89,7 @@ const HeroSection = () => {
                 className="flex items-center gap-2 border border-accent/30 text-accent px-6 py-3 rounded-lg font-semibold hover:bg-accent/10 transition-all duration-200 active:scale-95"
               >
                 <Download className="w-4 h-4" />
-                CV ডাউনলোড
+                {t("CV ডাউনলোড", "Download CV")}
               </a>
             </div>
           </motion.div>
@@ -102,13 +106,12 @@ const HeroSection = () => {
               <div className="relative w-full h-full rounded-3xl overflow-hidden shadow-2xl">
                 <img
                   src={heroImage}
-                  alt="MK Kopil - গ্রাফিক্স ডিজাইনার"
+                  alt="MK Kopil - Graphics Designer"
                   className="w-full h-full object-cover"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-foreground/20 to-transparent" />
               </div>
 
-              {/* Floating tool icons */}
               {floatingIcons.map((item, i) => (
                 <motion.div
                   key={item.label}
