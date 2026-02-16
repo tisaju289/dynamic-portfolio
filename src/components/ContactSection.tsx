@@ -1,17 +1,19 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { Send, CheckCircle } from "lucide-react";
+import { useLang } from "@/context/LanguageContext";
 
 const ContactSection = () => {
+  const { t } = useLang();
   const [form, setForm] = useState({ name: "", email: "", message: "" });
   const [submitted, setSubmitted] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   const validate = () => {
     const errs: Record<string, string> = {};
-    if (!form.name.trim()) errs.name = "নাম আবশ্যক";
-    if (!form.email.trim() || !/\S+@\S+\.\S+/.test(form.email)) errs.email = "সঠিক ইমেইল দিন";
-    if (!form.message.trim()) errs.message = "মেসেজ আবশ্যক";
+    if (!form.name.trim()) errs.name = t("নাম আবশ্যক", "Name is required");
+    if (!form.email.trim() || !/\S+@\S+\.\S+/.test(form.email)) errs.email = t("সঠিক ইমেইল দিন", "Enter a valid email");
+    if (!form.message.trim()) errs.message = t("মেসেজ আবশ্যক", "Message is required");
     return errs;
   };
 
@@ -36,11 +38,11 @@ const ContactSection = () => {
           className="text-center mb-12"
         >
           <h2 className="text-3xl md:text-4xl font-bold mb-4 text-heading">
-            যোগাযোগ করুন
+            {t("যোগাযোগ করুন", "Contact Me")}
           </h2>
-          <p className="text-muted-foreground text-lg">আপনার প্রজেক্ট নিয়ে আলোচনা করতে চাইলে মেসেজ করুন</p>
+          <p className="text-muted-foreground text-lg">{t("আপনার প্রজেক্ট নিয়ে আলোচনা করতে চাইলে মেসেজ করুন", "Send a message to discuss your project")}</p>
           <p className="text-muted-foreground mt-2">
-            ইমেইল: <a href="mailto:contact.mkkopil@gmail.com" className="text-primary hover:underline">contact.mkkopil@gmail.com</a>
+            {t("ইমেইল", "Email")}: <a href="mailto:contact.mkkopil@gmail.com" className="text-primary hover:underline">contact.mkkopil@gmail.com</a>
           </p>
         </motion.div>
 
@@ -51,13 +53,13 @@ const ContactSection = () => {
             className="text-center py-16"
           >
             <CheckCircle className="w-16 h-16 mx-auto text-primary mb-4" />
-            <h3 className="text-2xl font-bold mb-2">ধন্যবাদ!</h3>
-            <p className="text-muted-foreground">আপনার মেসেজ পাঠানো হয়েছে। শীঘ্রই যোগাযোগ করা হবে।</p>
+            <h3 className="text-2xl font-bold mb-2">{t("ধন্যবাদ!", "Thank You!")}</h3>
+            <p className="text-muted-foreground">{t("আপনার মেসেজ পাঠানো হয়েছে। শীঘ্রই যোগাযোগ করা হবে।", "Your message has been sent. We'll get back to you soon.")}</p>
             <button
               onClick={() => setSubmitted(false)}
               className="mt-6 text-primary font-medium hover:underline"
             >
-              আবার মেসেজ করুন
+              {t("আবার মেসেজ করুন", "Send Another Message")}
             </button>
           </motion.div>
         ) : (
@@ -72,7 +74,7 @@ const ContactSection = () => {
             {(["name", "email", "message"] as const).map((field) => (
               <div key={field} className="relative">
                 <label className="block text-sm font-medium mb-2 text-foreground">
-                  {field === "name" ? "নাম" : field === "email" ? "ইমেইল" : "মেসেজ"}
+                  {field === "name" ? t("নাম", "Name") : field === "email" ? t("ইমেইল", "Email") : t("মেসেজ", "Message")}
                 </label>
                 {field === "message" ? (
                   <textarea
@@ -105,7 +107,7 @@ const ContactSection = () => {
               className="w-full gradient-bg text-primary-foreground py-3 rounded-xl font-semibold flex items-center justify-center gap-2 hover:shadow-lg transition-all duration-200 active:scale-95"
             >
               <Send className="w-4 h-4" />
-              মেসেজ পাঠান
+              {t("মেসেজ পাঠান", "Send Message")}
             </button>
           </motion.form>
         )}

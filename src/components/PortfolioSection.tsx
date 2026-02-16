@@ -1,6 +1,7 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
 import { X } from "lucide-react";
+import { useLang } from "@/context/LanguageContext";
 import alifClothing from "@/assets/portfolio/alif-clothing.png";
 import rareZone from "@/assets/portfolio/rare-zone.jpg";
 import uddoktaDigital from "@/assets/portfolio/uddokta-digital.png";
@@ -8,21 +9,24 @@ import uddoktaMedia from "@/assets/portfolio/uddokta-media.png";
 import vishuddhaBazar from "@/assets/portfolio/vishuddha-bazar.png";
 import waziCollection from "@/assets/portfolio/wazi-collection.png";
 
-const categories = ["সকল", "Logo", "Branding", "Social Media", "Print"];
-
-const projects = [
-  { id: 1, title: "Alif Clothing", category: "Logo", image: alifClothing, description: "ফ্যাশন ব্র্যান্ডের জন্য মডার্ন লোগো ডিজাইন" },
-  { id: 2, title: "Rare Zone", category: "Branding", image: rareZone, description: "শপিং ব্র্যান্ডের জন্য এলিগ্যান্ট ব্র্যান্ড আইডেন্টিটি" },
-  { id: 3, title: "Uddokta Digital Solution", category: "Logo", image: uddoktaDigital, description: "ডিজিটাল এজেন্সির জন্য প্রফেশনাল লোগো" },
-  { id: 4, title: "Uddokta Media Solution", category: "Logo", image: uddoktaMedia, description: "মিডিয়া কোম্পানির জন্য গ্র্যাডিয়েন্ট লোগো ডিজাইন" },
-  { id: 5, title: "Vishuddha Bazar", category: "Branding", image: vishuddhaBazar, description: "ই-কমার্স ব্র্যান্ডের জন্য ক্রিয়েটিভ ব্র্যান্ডিং" },
-  { id: 6, title: "Wazi Collection", category: "Logo", image: waziCollection, description: "ক্লোদিং ব্র্যান্ডের জন্য ইউনিক লোগো" },
-];
-
 const PortfolioSection = () => {
-  const [active, setActive] = useState("সকল");
+  const { t } = useLang();
+  const [active, setActive] = useState(t("সকল", "All"));
   const [selectedProject, setSelectedProject] = useState<typeof projects[0] | null>(null);
-  const filtered = active === "সকল" ? projects : projects.filter((p) => p.category === active);
+
+  const categories = [t("সকল", "All"), "Logo", "Branding", "Social Media", "Print"];
+
+  const projects = [
+    { id: 1, title: "Alif Clothing", category: "Logo", image: alifClothing, description: t("ফ্যাশন ব্র্যান্ডের জন্য মডার্ন লোগো ডিজাইন", "Modern logo design for a fashion brand") },
+    { id: 2, title: "Rare Zone", category: "Branding", image: rareZone, description: t("শপিং ব্র্যান্ডের জন্য এলিগ্যান্ট ব্র্যান্ড আইডেন্টিটি", "Elegant brand identity for a shopping brand") },
+    { id: 3, title: "Uddokta Digital Solution", category: "Logo", image: uddoktaDigital, description: t("ডিজিটাল এজেন্সির জন্য প্রফেশনাল লোগো", "Professional logo for a digital agency") },
+    { id: 4, title: "Uddokta Media Solution", category: "Logo", image: uddoktaMedia, description: t("মিডিয়া কোম্পানির জন্য গ্র্যাডিয়েন্ট লোগো ডিজাইন", "Gradient logo design for a media company") },
+    { id: 5, title: "Vishuddha Bazar", category: "Branding", image: vishuddhaBazar, description: t("ই-কমার্স ব্র্যান্ডের জন্য ক্রিয়েটিভ ব্র্যান্ডিং", "Creative branding for an e-commerce brand") },
+    { id: 6, title: "Wazi Collection", category: "Logo", image: waziCollection, description: t("ক্লোদিং ব্র্যান্ডের জন্য ইউনিক লোগো", "Unique logo for a clothing brand") },
+  ];
+
+  const allLabel = categories[0];
+  const filtered = active === allLabel ? projects : projects.filter((p) => p.category === active);
 
   return (
     <section id="portfolio" className="py-24">
@@ -35,12 +39,11 @@ const PortfolioSection = () => {
           className="text-center mb-12"
         >
           <h2 className="text-3xl md:text-4xl font-bold mb-4 text-heading">
-            আমার কাজসমূহ
+            {t("আমার কাজসমূহ", "My Portfolio")}
           </h2>
-          <p className="text-muted-foreground text-lg">সাম্প্রতিক কিছু প্রজেক্ট</p>
+          <p className="text-muted-foreground text-lg">{t("সাম্প্রতিক কিছু প্রজেক্ট", "Some recent projects")}</p>
         </motion.div>
 
-        {/* Category tabs */}
         <div className="flex flex-wrap justify-center gap-2 mb-10">
           {categories.map((cat) => (
             <button
@@ -57,7 +60,6 @@ const PortfolioSection = () => {
           ))}
         </div>
 
-        {/* Project grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {filtered.map((p, i) => (
             <motion.div
@@ -71,12 +73,7 @@ const PortfolioSection = () => {
               className="glass rounded-2xl overflow-hidden group cursor-pointer hover:-translate-y-1 hover:shadow-xl transition-all duration-200"
             >
               <div className="aspect-square bg-muted overflow-hidden">
-                <img
-                  src={p.image}
-                  alt={p.title}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                  loading="lazy"
-                />
+                <img src={p.image} alt={p.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy" />
               </div>
               <div className="p-5">
                 <span className="text-xs font-medium text-primary mb-1 block">{p.category}</span>
@@ -88,7 +85,6 @@ const PortfolioSection = () => {
         </div>
       </div>
 
-      {/* Lightbox Modal */}
       <AnimatePresence>
         {selectedProject && (
           <motion.div
@@ -112,11 +108,7 @@ const PortfolioSection = () => {
               >
                 <X className="w-5 h-5" />
               </button>
-              <img
-                src={selectedProject.image}
-                alt={selectedProject.title}
-                className="w-full max-h-[60vh] object-contain bg-muted"
-              />
+              <img src={selectedProject.image} alt={selectedProject.title} className="w-full max-h-[60vh] object-contain bg-muted" />
               <div className="p-6">
                 <span className="text-xs font-medium text-primary mb-1 block">{selectedProject.category}</span>
                 <h3 className="text-xl font-bold mb-2">{selectedProject.title}</h3>

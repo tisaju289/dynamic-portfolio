@@ -1,21 +1,22 @@
 import { useState, useEffect } from "react";
-import { Menu, X } from "lucide-react";
+import { Menu, X, Globe } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import ThemeToggle from "./ThemeToggle";
-
-const navItems = [
-  { label: "হোম", href: "#home" },
-  { label: "আমার সম্পর্কে", href: "#about" },
-  { label: "সেবাসমূহ", href: "#services" },
-  { label: "আমার কাজসমূহ", href: "#portfolio" },
-  
-  { label: "যোগাযোগ", href: "#contact" },
-];
+import { useLang } from "@/context/LanguageContext";
 
 const Navbar = () => {
+  const { lang, toggleLang, t } = useLang();
   const [active, setActive] = useState("#home");
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+
+  const navItems = [
+    { label: t("হোম", "Home"), href: "#home" },
+    { label: t("আমার সম্পর্কে", "About"), href: "#about" },
+    { label: t("সেবাসমূহ", "Services"), href: "#services" },
+    { label: t("আমার কাজসমূহ", "Portfolio"), href: "#portfolio" },
+    { label: t("যোগাযোগ", "Contact"), href: "#contact" },
+  ];
 
   useEffect(() => {
     const onScroll = () => {
@@ -31,7 +32,7 @@ const Navbar = () => {
     };
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+  }, [lang]);
 
   const handleClick = (href: string) => {
     setMobileOpen(false);
@@ -75,7 +76,15 @@ const Navbar = () => {
           ))}
         </ul>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1">
+          <button
+            onClick={toggleLang}
+            className="flex items-center gap-1 px-2 py-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted transition-colors duration-200 text-xs font-semibold"
+            aria-label="Toggle language"
+          >
+            <Globe className="w-4 h-4" />
+            {lang === "bn" ? "EN" : "বাং"}
+          </button>
           <ThemeToggle />
           {/* Mobile toggle */}
           <button
