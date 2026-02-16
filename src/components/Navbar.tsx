@@ -46,7 +46,7 @@ const Navbar = () => {
       }`}
     >
       <div className="container mx-auto flex items-center justify-between px-4 py-3 md:py-4">
-        <a href="#home" onClick={() => handleClick("#home")} className="text-xl font-bold gradient-text">
+        <a href="#home" onClick={() => handleClick("#home")} className="text-xl font-bold text-heading">
           MK Kopil
         </a>
 
