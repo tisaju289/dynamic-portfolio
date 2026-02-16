@@ -30,6 +30,17 @@ const Footer = () => (
       <p className="text-muted-foreground text-sm">
         © 2026 MK Kopil | All Rights Reserved
       </p>
+      <p className="text-muted-foreground text-xs mt-3">
+        Develop by{" "}
+        <a
+          href="https://tisaju.com"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-primary hover:underline"
+        >
+          Tajul Islam Saju
+        </a>
+      </p>
     </div>
   </footer>
 );

@@ -18,7 +18,7 @@ const TestimonialsSection = () => (
         className="text-center mb-16"
       >
         <h2 className="text-3xl md:text-4xl font-bold mb-4">
-          ক্লায়েন্ট <span className="gradient-text">মতামত</span>
+          ক্লায়েন্ট মতামত
         </h2>
         <p className="text-muted-foreground text-lg">যারা আমার সাথে কাজ করেছেন</p>
       </motion.div>

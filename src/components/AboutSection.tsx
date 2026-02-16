@@ -28,7 +28,7 @@ const AboutSection = () => (
         className="max-w-3xl mx-auto text-center mb-16"
       >
         <h2 className="text-3xl md:text-4xl font-bold mb-6">
-          আমার <span className="gradient-text">সম্পর্কে</span>
+          আমার সম্পর্কে
         </h2>
         <p className="text-muted-foreground text-lg leading-relaxed">
           আমি MK Kopil, একজন অভিজ্ঞ গ্রাফিক্স ডিজাইনার। বিগত কয়েক বছর ধরে আমি বিভিন্ন ব্র্যান্ড ও ব্যবসার জন্য
