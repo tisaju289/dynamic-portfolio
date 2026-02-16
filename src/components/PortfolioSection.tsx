@@ -34,7 +34,7 @@ const PortfolioSection = () => {
           transition={{ duration: 0.5 }}
           className="text-center mb-12"
         >
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">
+          <h2 className="text-3xl md:text-4xl font-bold mb-4 text-heading">
             আমার কাজসমূহ
           </h2>
           <p className="text-muted-foreground text-lg">সাম্প্রতিক কিছু প্রজেক্ট</p>

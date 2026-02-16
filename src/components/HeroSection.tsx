@@ -4,12 +4,11 @@ import { Download } from "lucide-react";
 import heroImage from "@/assets/mk-kopil.png";
 import illustratorLogo from "@/assets/icons/illustrator.png";
 import photoshopLogo from "@/assets/icons/photoshop.png";
-import behanceLogo from "@/assets/icons/behance.png";
+
 
 const floatingIcons = [
   { img: illustratorLogo, label: "Illustrator", delay: 0 },
   { img: photoshopLogo, label: "Photoshop", delay: 0.3 },
-  { img: behanceLogo, label: "Behance", delay: 0.6 },
 ];
 
 const roles = [
