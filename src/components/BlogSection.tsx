@@ -3,11 +3,19 @@ import { Calendar, ArrowRight } from "lucide-react";
 import { useLang } from "@/context/LanguageContext";
 import { useBlogPosts } from "@/hooks/useSiteContent";
 import { useState } from "react";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 const BlogSection = () => {
   const { t } = useLang();
   const { data: posts } = useBlogPosts();
-  const [expandedId, setExpandedId] = useState<string | null>(null);
+  const [selectedPost, setSelectedPost] = useState<any | null>(null);
 
   if (!posts || posts.length === 0) return null;
 
@@ -33,7 +41,8 @@ const BlogSection = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: i * 0.1, duration: 0.4 }}
-              className="glass rounded-2xl overflow-hidden group hover:-translate-y-1 hover:shadow-xl transition-all duration-200"
+              className="glass rounded-2xl overflow-hidden group hover:-translate-y-1 hover:shadow-xl transition-all duration-200 cursor-pointer"
+              onClick={() => setSelectedPost(post)}
             >
               {post.cover_image_url && (
                 <div className="aspect-video bg-muted overflow-hidden">
@@ -47,20 +56,48 @@ const BlogSection = () => {
                 </div>
                 <h3 className="font-bold text-lg mb-2 line-clamp-2">{t(post.title_bn, post.title_en)}</h3>
                 <p className="text-sm text-muted-foreground mb-3 line-clamp-3">
-                  {expandedId === post.id ? t(post.content_bn, post.content_en) : t(post.excerpt_bn, post.excerpt_en)}
+                  {t(post.excerpt_bn, post.excerpt_en)}
                 </p>
-                <button
-                  onClick={() => setExpandedId(expandedId === post.id ? null : post.id)}
-                  className="inline-flex items-center gap-1 text-sm font-medium text-primary hover:underline"
-                >
-                  {expandedId === post.id ? t("সংক্ষেপ", "Show Less") : t("আরো পড়ুন", "Read More")}
+                <span className="inline-flex items-center gap-1 text-sm font-medium text-primary hover:underline">
+                  {t("বিস্তারিত দেখুন", "Read More")}
                   <ArrowRight className="w-3 h-3" />
-                </button>
+                </span>
               </div>
             </motion.article>
           ))}
         </div>
       </div>
+
+      <Dialog open={!!selectedPost} onOpenChange={(open) => !open && setSelectedPost(null)}>
+        <DialogContent className="max-w-2xl max-h-[90vh] p-0 overflow-hidden">
+          <ScrollArea className="max-h-[90vh]">
+            {selectedPost?.cover_image_url && (
+              <img
+                src={selectedPost.cover_image_url}
+                alt={t(selectedPost.title_bn, selectedPost.title_en)}
+                className="w-full aspect-video object-cover"
+              />
+            )}
+            <div className="p-6">
+              <DialogHeader>
+                <div className="flex items-center gap-2 text-xs text-muted-foreground mb-2">
+                  <Calendar className="w-3 h-3" />
+                  {selectedPost && new Date(selectedPost.created_at).toLocaleDateString(t("bn-BD", "en-US"), { year: "numeric", month: "long", day: "numeric" })}
+                </div>
+                <DialogTitle className="text-xl md:text-2xl font-bold">
+                  {selectedPost && t(selectedPost.title_bn, selectedPost.title_en)}
+                </DialogTitle>
+                <DialogDescription className="text-muted-foreground mt-1">
+                  {selectedPost && t(selectedPost.excerpt_bn, selectedPost.excerpt_en)}
+                </DialogDescription>
+              </DialogHeader>
+              <div className="mt-4 text-sm leading-relaxed whitespace-pre-wrap text-foreground">
+                {selectedPost && t(selectedPost.content_bn, selectedPost.content_en)}
+              </div>
+            </div>
+          </ScrollArea>
+        </DialogContent>
+      </Dialog>
     </section>
   );
 };
