@@ -181,6 +181,7 @@ export type Database = {
           created_at: string
           cv_url: string | null
           id: string
+          logo_url: string | null
           site_name: string | null
           updated_at: string
           whatsapp_number: string | null
@@ -189,6 +190,7 @@ export type Database = {
           created_at?: string
           cv_url?: string | null
           id?: string
+          logo_url?: string | null
           site_name?: string | null
           updated_at?: string
           whatsapp_number?: string | null
@@ -197,6 +199,7 @@ export type Database = {
           created_at?: string
           cv_url?: string | null
           id?: string
+          logo_url?: string | null
           site_name?: string | null
           updated_at?: string
           whatsapp_number?: string | null

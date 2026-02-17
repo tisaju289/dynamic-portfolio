@@ -3,9 +3,11 @@ import { Menu, X, Globe } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import ThemeToggle from "./ThemeToggle";
 import { useLang } from "@/context/LanguageContext";
+import { useSiteSettings } from "@/hooks/useSiteContent";
 
 const Navbar = () => {
   const { lang, toggleLang, t } = useLang();
+  const { data: settings } = useSiteSettings();
   const [active, setActive] = useState("#home");
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -47,8 +49,11 @@ const Navbar = () => {
       }`}
     >
       <div className="container mx-auto flex items-center justify-between px-4 py-3 md:py-4">
-        <a href="#home" onClick={() => handleClick("#home")} className="text-xl font-bold text-heading">
-          MK Kopil
+        <a href="#home" onClick={() => handleClick("#home")} className="flex items-center gap-2 text-xl font-bold text-heading">
+          {(settings as any)?.logo_url && (
+            <img src={(settings as any).logo_url} alt="Logo" className="w-8 h-8 object-contain rounded" />
+          )}
+          {settings?.site_name || "MK Kopil"}
         </a>
 
         {/* Desktop */}
