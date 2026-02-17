@@ -9,14 +9,16 @@ import { Upload, GripVertical, Check, Palette } from "lucide-react";
 import ImageUpload from "@/components/admin/ImageUpload";
 import { themePresets, fontOptions } from "@/components/DynamicThemeProvider";
 
-const DEFAULT_SECTIONS = ["home", "about", "services", "portfolio", "testimonials", "contact"];
+const DEFAULT_SECTIONS = ["home", "about", "stats", "services", "portfolio", "testimonials", "blog", "contact"];
 
 const sectionLabels: Record<string, string> = {
   home: "Home / Hero",
   about: "About",
+  stats: "Stats / Counters",
   services: "Services",
   portfolio: "Portfolio",
   testimonials: "Testimonials",
+  blog: "Blog & Articles",
   contact: "Contact",
 };
 
@@ -47,18 +49,23 @@ const SettingsEditor = () => {
   const [dragIdx, setDragIdx] = useState<number | null>(null);
 
   useEffect(() => {
-    if (data) setForm({
-      site_name: data.site_name || "",
-      whatsapp_number: data.whatsapp_number || "",
-      cv_url: data.cv_url || "",
-      logo_url: (data as any).logo_url || "",
-      section_order: (data as any).section_order || DEFAULT_SECTIONS,
-      show_theme_toggle: (data as any).show_theme_toggle ?? true,
-      show_lang_toggle: (data as any).show_lang_toggle ?? true,
-      theme_preset: (data as any).theme_preset || "green",
-      primary_color: (data as any).primary_color || "",
-      font_family: (data as any).font_family || "Noto Sans Bengali",
-    });
+    if (data) {
+      const dbOrder = (data as any).section_order || DEFAULT_SECTIONS;
+      // Merge missing sections from DEFAULT_SECTIONS
+      const merged = [...dbOrder, ...DEFAULT_SECTIONS.filter((s) => !dbOrder.includes(s))];
+      setForm({
+        site_name: data.site_name || "",
+        whatsapp_number: data.whatsapp_number || "",
+        cv_url: data.cv_url || "",
+        logo_url: (data as any).logo_url || "",
+        section_order: merged,
+        show_theme_toggle: (data as any).show_theme_toggle ?? true,
+        show_lang_toggle: (data as any).show_lang_toggle ?? true,
+        theme_preset: (data as any).theme_preset || "green",
+        primary_color: (data as any).primary_color || "",
+        font_family: (data as any).font_family || "Noto Sans Bengali",
+      });
+    }
   }, [data]);
 
   const handleCvUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {

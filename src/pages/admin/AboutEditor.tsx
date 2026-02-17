@@ -2,9 +2,10 @@ import { useState, useEffect } from "react";
 import { useAboutContent, useSkills } from "@/hooks/useSiteContent";
 import { supabase } from "@/integrations/supabase/client";
 import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 import { toast } from "@/hooks/use-toast";
 import { useQueryClient } from "@tanstack/react-query";
-import { Palette, Layers, Share2, Printer, PenTool, Image, Monitor, Smartphone, Globe, Brush, Camera, Type, Code, Zap, Star, Heart, Award, Target, TrendingUp, Trash2, Plus, Upload } from "lucide-react";
+import { Palette, Layers, Share2, Printer, PenTool, Image, Monitor, Smartphone, Globe, Brush, Camera, Type, Code, Zap, Star, Heart, Award, Target, TrendingUp, Trash2, Plus, Upload, Save } from "lucide-react";
 
 const availableIcons: Record<string, any> = {
   Palette, Layers, Share2, Printer, PenTool, Image, Monitor, Smartphone, Globe, Brush, Camera, Type, Code, Zap, Star, Heart, Award, Target, TrendingUp
@@ -46,6 +47,8 @@ const AboutEditor = () => {
   const { data: skills, isLoading: skillsLoading } = useSkills();
   const queryClient = useQueryClient();
   const [form, setForm] = useState({ title_bn: "", title_en: "", description_bn: "", description_en: "" });
+  const [localSkills, setLocalSkills] = useState<any[]>([]);
+  const [dirtySkills, setDirtySkills] = useState<Set<string>>(new Set());
 
   useEffect(() => {
     if (data) setForm({
@@ -54,6 +57,10 @@ const AboutEditor = () => {
     });
   }, [data]);
 
+  useEffect(() => {
+    if (skills) setLocalSkills(skills.map((s: any) => ({ ...s })));
+  }, [skills]);
+
   const handleSave = async () => {
     const op = data?.id
       ? supabase.from("about_content").update(form).eq("id", data.id)
@@ -61,19 +68,30 @@ const AboutEditor = () => {
     const { error } = await op;
     if (error) { toast({ title: "Error", description: error.message, variant: "destructive" }); return; }
     queryClient.invalidateQueries({ queryKey: ["about_content"] });
-    toast({ title: "Saved!" });
+    toast({ title: "সেভ হয়েছে!", description: "About section আপডেট হয়েছে।" });
+  };
+
+  const updateLocalSkill = (id: string, field: string, value: any) => {
+    setLocalSkills((prev) => prev.map((s) => (s.id === id ? { ...s, [field]: value } : s)));
+    setDirtySkills((prev) => new Set(prev).add(id));
+  };
+
+  const saveSkill = async (id: string) => {
+    const skill = localSkills.find((s) => s.id === id);
+    if (!skill) return;
+    const { error } = await supabase.from("skills").update({
+      title: skill.title, icon_name: skill.icon_name, icon_image_url: skill.icon_image_url || "",
+      description_bn: skill.description_bn, description_en: skill.description_en, sort_order: skill.sort_order,
+    }).eq("id", id);
+    if (error) { toast({ title: "Error", description: error.message, variant: "destructive" }); return; }
+    setDirtySkills((prev) => { const n = new Set(prev); n.delete(id); return n; });
+    queryClient.invalidateQueries({ queryKey: ["skills"] });
+    toast({ title: "সেভ হয়েছে!", description: "Skill আপডেট হয়েছে।" });
   };
 
   const addSkill = async () => {
-    const maxOrder = skills?.length ? Math.max(...skills.map((s: any) => s.sort_order || 0)) + 1 : 0;
+    const maxOrder = localSkills.length ? Math.max(...localSkills.map((s) => s.sort_order || 0)) + 1 : 0;
     const { error } = await supabase.from("skills").insert({ title: "New Skill", icon_name: "Palette", description_bn: "", description_en: "", sort_order: maxOrder });
-    if (error) { toast({ title: "Error", description: error.message, variant: "destructive" }); return; }
-    queryClient.invalidateQueries({ queryKey: ["skills"] });
-    toast({ title: "Skill added!" });
-  };
-
-  const updateSkill = async (id: string, field: string, value: string | number) => {
-    const { error } = await supabase.from("skills").update({ [field]: value }).eq("id", id);
     if (error) { toast({ title: "Error", description: error.message, variant: "destructive" }); return; }
     queryClient.invalidateQueries({ queryKey: ["skills"] });
   };
@@ -82,7 +100,6 @@ const AboutEditor = () => {
     const { error } = await supabase.from("skills").delete().eq("id", id);
     if (error) { toast({ title: "Error", description: error.message, variant: "destructive" }); return; }
     queryClient.invalidateQueries({ queryKey: ["skills"] });
-    toast({ title: "Skill deleted!" });
   };
 
   if (isLoading) return <p>Loading...</p>;
@@ -113,36 +130,44 @@ const AboutEditor = () => {
       {/* Skills / Cards Section */}
       <h2 className="text-xl font-bold text-heading mb-4">Skills / Cards</h2>
       <div className="space-y-4 max-w-2xl">
-        {skillsLoading ? <p>Loading skills...</p> : skills?.map((skill: any) => {
+        {skillsLoading ? <p>Loading skills...</p> : localSkills.map((skill) => {
           const IconComp = availableIcons[skill.icon_name] || Palette;
-          const hasCustomImage = !!(skill as any).icon_image_url;
+          const hasCustomImage = !!skill.icon_image_url;
+          const isDirty = dirtySkills.has(skill.id);
           return (
             <div key={skill.id} className="glass rounded-xl p-5 space-y-3">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 gradient-bg rounded-lg flex items-center justify-center overflow-hidden">
                     {hasCustomImage ? (
-                      <img src={(skill as any).icon_image_url} alt={skill.title} className="w-full h-full object-cover" />
+                      <img src={skill.icon_image_url} alt={skill.title} className="w-full h-full object-cover" />
                     ) : (
                       <IconComp className="w-5 h-5 text-primary-foreground" />
                     )}
                   </div>
                   <span className="font-semibold">{skill.title}</span>
                 </div>
-                <button onClick={() => deleteSkill(skill.id)} className="text-destructive hover:bg-destructive/10 p-2 rounded-lg transition-colors">
-                  <Trash2 className="w-4 h-4" />
-                </button>
+                <div className="flex items-center gap-1">
+                  {isDirty && (
+                    <Button size="sm" onClick={() => saveSkill(skill.id)} className="gap-1">
+                      <Save className="w-4 h-4" /> Save
+                    </Button>
+                  )}
+                  <button onClick={() => deleteSkill(skill.id)} className="text-destructive hover:bg-destructive/10 p-2 rounded-lg transition-colors">
+                    <Trash2 className="w-4 h-4" />
+                  </button>
+                </div>
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <label className="block text-xs font-medium mb-1">Title</label>
-                  <Input defaultValue={skill.title} onBlur={(e) => updateSkill(skill.id, "title", e.target.value)} />
+                  <Input value={skill.title || ""} onChange={(e) => updateLocalSkill(skill.id, "title", e.target.value)} />
                 </div>
                 <div>
                   <label className="block text-xs font-medium mb-1">Lucide Icon (fallback)</label>
                   <select
-                    defaultValue={skill.icon_name || "Palette"}
-                    onChange={(e) => updateSkill(skill.id, "icon_name", e.target.value)}
+                    value={skill.icon_name || "Palette"}
+                    onChange={(e) => updateLocalSkill(skill.id, "icon_name", e.target.value)}
                     className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm"
                   >
                     {Object.keys(availableIcons).map((name) => (
@@ -152,44 +177,40 @@ const AboutEditor = () => {
                 </div>
               </div>
 
-              {/* Custom Icon Image - Drag & Drop + URL */}
               <div>
                 <label className="block text-xs font-medium mb-1">Custom Icon Image (drag & drop or paste URL)</label>
                 <div className="flex gap-2 items-start">
                   <div className="flex-1">
                     <Input
                       placeholder="Paste image URL here..."
-                      defaultValue={(skill as any).icon_image_url || ""}
-                      onBlur={(e) => updateSkill(skill.id, "icon_image_url", e.target.value)}
+                      value={skill.icon_image_url || ""}
+                      onChange={(e) => updateLocalSkill(skill.id, "icon_image_url", e.target.value)}
                     />
                   </div>
                   {hasCustomImage && (
                     <button
-                      onClick={() => updateSkill(skill.id, "icon_image_url", "")}
+                      onClick={() => updateLocalSkill(skill.id, "icon_image_url", "")}
                       className="text-xs text-destructive hover:underline mt-2"
                     >Remove</button>
                   )}
                 </div>
                 <SkillIconDropZone
                   skillId={skill.id}
-                  onUploaded={(url) => {
-                    updateSkill(skill.id, "icon_image_url", url);
-                    queryClient.invalidateQueries({ queryKey: ["skills"] });
-                  }}
+                  onUploaded={(url) => updateLocalSkill(skill.id, "icon_image_url", url)}
                 />
               </div>
 
               <div>
                 <label className="block text-xs font-medium mb-1">Description (Bengali)</label>
-                <Input defaultValue={skill.description_bn || ""} onBlur={(e) => updateSkill(skill.id, "description_bn", e.target.value)} />
+                <Input value={skill.description_bn || ""} onChange={(e) => updateLocalSkill(skill.id, "description_bn", e.target.value)} />
               </div>
               <div>
                 <label className="block text-xs font-medium mb-1">Description (English)</label>
-                <Input defaultValue={skill.description_en || ""} onBlur={(e) => updateSkill(skill.id, "description_en", e.target.value)} />
+                <Input value={skill.description_en || ""} onChange={(e) => updateLocalSkill(skill.id, "description_en", e.target.value)} />
               </div>
               <div>
                 <label className="block text-xs font-medium mb-1">Sort Order</label>
-                <Input type="number" defaultValue={skill.sort_order || 0} onBlur={(e) => updateSkill(skill.id, "sort_order", parseInt(e.target.value) || 0)} className="w-24" />
+                <Input type="number" value={skill.sort_order || 0} onChange={(e) => updateLocalSkill(skill.id, "sort_order", parseInt(e.target.value) || 0)} className="w-24" />
               </div>
             </div>
           );
