@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
-import { Calendar, ArrowRight, Facebook, MessageCircle, Link2, Check } from "lucide-react";
+import { Calendar, ArrowRight, Facebook, MessageCircle, Link2 } from "lucide-react";
+import DOMPurify from "dompurify";
 import { useLang } from "@/context/LanguageContext";
 import { useBlogPosts } from "@/hooks/useSiteContent";
 import { useState } from "react";
@@ -94,7 +95,7 @@ const BlogSection = () => {
               </DialogHeader>
               <div 
                 className="mt-4 text-sm leading-relaxed text-foreground prose prose-sm dark:prose-invert max-w-none"
-                dangerouslySetInnerHTML={{ __html: selectedPost ? t(selectedPost.content_bn, selectedPost.content_en) : "" }}
+                dangerouslySetInnerHTML={{ __html: selectedPost ? DOMPurify.sanitize(t(selectedPost.content_bn, selectedPost.content_en) || "") : "" }}
               />
               {selectedPost && (
                 <div className="mt-6 pt-4 border-t border-border flex items-center gap-3">
