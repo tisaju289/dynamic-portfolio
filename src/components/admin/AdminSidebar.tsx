@@ -1,6 +1,7 @@
 import { Home, User, Briefcase, FolderOpen, MessageSquare, Mail, Share2, Settings, LogOut } from "lucide-react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
+import { useSiteSettings } from "@/hooks/useSiteContent";
 
 const links = [
   { to: "/admin", icon: Home, label: "Dashboard", end: true },
@@ -16,6 +17,7 @@ const links = [
 
 const AdminSidebar = () => {
   const { signOut } = useAuth();
+  const { data: settings } = useSiteSettings();
   const navigate = useNavigate();
 
   const handleLogout = async () => {
@@ -27,7 +29,7 @@ const AdminSidebar = () => {
     <aside className="w-64 min-h-screen bg-card border-r border-border flex flex-col">
       <div className="p-6 border-b border-border">
         <h2 className="text-lg font-bold text-heading">Admin Panel</h2>
-        <p className="text-xs text-muted-foreground mt-1">MK Kopil Portfolio</p>
+        <p className="text-xs text-muted-foreground mt-1">{settings?.site_name || "MK Kopil"} Portfolio</p>
       </div>
 
       <nav className="flex-1 p-4 space-y-1">
