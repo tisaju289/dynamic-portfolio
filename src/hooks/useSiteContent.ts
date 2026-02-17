@@ -90,3 +90,23 @@ export const useContactMessages = () =>
       return data ?? [];
     },
   });
+
+export const useStats = () =>
+  useQuery({
+    queryKey: ["stats"],
+    queryFn: async () => {
+      const { data } = await supabase.from("stats").select("*").order("sort_order");
+      return data ?? [];
+    },
+  });
+
+export const useBlogPosts = (includeUnpublished = false) =>
+  useQuery({
+    queryKey: ["blog_posts", includeUnpublished],
+    queryFn: async () => {
+      let q = supabase.from("blog_posts").select("*").order("created_at", { ascending: false });
+      if (!includeUnpublished) q = q.eq("is_published", true);
+      const { data } = await q;
+      return data ?? [];
+    },
+  });

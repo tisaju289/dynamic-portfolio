@@ -1,4 +1,4 @@
-import { Home, User, Briefcase, FolderOpen, MessageSquare, Mail, Share2, Settings, LogOut } from "lucide-react";
+import { Home, User, Briefcase, FolderOpen, MessageSquare, Mail, Share2, Settings, LogOut, BarChart3, FileText } from "lucide-react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { useSiteSettings } from "@/hooks/useSiteContent";
@@ -7,9 +7,11 @@ const links = [
   { to: "/admin", icon: Home, label: "Dashboard", end: true },
   { to: "/admin/hero", icon: User, label: "Hero Section" },
   { to: "/admin/about", icon: User, label: "About" },
+  { to: "/admin/stats", icon: BarChart3, label: "Stats / Counters" },
   { to: "/admin/services", icon: Briefcase, label: "Services" },
   { to: "/admin/portfolio", icon: FolderOpen, label: "Portfolio" },
   { to: "/admin/testimonials", icon: MessageSquare, label: "Testimonials" },
+  { to: "/admin/blog", icon: FileText, label: "Blog" },
   { to: "/admin/contact", icon: Mail, label: "Contact Messages" },
   { to: "/admin/social", icon: Share2, label: "Social Links" },
   { to: "/admin/settings", icon: Settings, label: "Settings" },
