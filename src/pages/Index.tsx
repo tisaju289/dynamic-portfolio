@@ -1,4 +1,5 @@
 import { LanguageProvider } from "@/context/LanguageContext";
+import DynamicThemeProvider from "@/components/DynamicThemeProvider";
 import Navbar from "@/components/Navbar";
 import HeroSection from "@/components/HeroSection";
 import AboutSection from "@/components/AboutSection";
@@ -38,13 +39,15 @@ const SiteContent = () => {
 
 const Index = () => (
   <LanguageProvider>
-    <main className="min-h-screen">
-      <ScrollProgress />
-      <Navbar />
-      <SiteContent />
-      <Footer />
-      <WhatsAppButton />
-    </main>
+    <DynamicThemeProvider>
+      <main className="min-h-screen">
+        <ScrollProgress />
+        <Navbar />
+        <SiteContent />
+        <Footer />
+        <WhatsAppButton />
+      </main>
+    </DynamicThemeProvider>
   </LanguageProvider>
 );
 

@@ -186,36 +186,45 @@ export type Database = {
         Row: {
           created_at: string
           cv_url: string | null
+          font_family: string | null
           id: string
           logo_url: string | null
+          primary_color: string | null
           section_order: string[] | null
           show_lang_toggle: boolean | null
           show_theme_toggle: boolean | null
           site_name: string | null
+          theme_preset: string | null
           updated_at: string
           whatsapp_number: string | null
         }
         Insert: {
           created_at?: string
           cv_url?: string | null
+          font_family?: string | null
           id?: string
           logo_url?: string | null
+          primary_color?: string | null
           section_order?: string[] | null
           show_lang_toggle?: boolean | null
           show_theme_toggle?: boolean | null
           site_name?: string | null
+          theme_preset?: string | null
           updated_at?: string
           whatsapp_number?: string | null
         }
         Update: {
           created_at?: string
           cv_url?: string | null
+          font_family?: string | null
           id?: string
           logo_url?: string | null
+          primary_color?: string | null
           section_order?: string[] | null
           show_lang_toggle?: boolean | null
           show_theme_toggle?: boolean | null
           site_name?: string | null
+          theme_preset?: string | null
           updated_at?: string
           whatsapp_number?: string | null
         }
