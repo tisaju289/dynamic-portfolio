@@ -17,6 +17,7 @@ const Navbar = () => {
     { label: t("আমার সম্পর্কে", "About"), href: "#about" },
     { label: t("সেবাসমূহ", "Services"), href: "#services" },
     { label: t("আমার কাজসমূহ", "Portfolio"), href: "#portfolio" },
+    { label: t("ব্লগ", "Blog"), href: "#blog" },
     { label: t("যোগাযোগ", "Contact"), href: "#contact" },
   ];
 
