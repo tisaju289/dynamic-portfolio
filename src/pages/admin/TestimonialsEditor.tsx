@@ -39,17 +39,35 @@ const TestimonialsEditor = () => {
       </div>
 
       {editing && (
-        <div className="glass rounded-xl p-6 space-y-3 max-w-2xl mb-6">
-          <div className="grid grid-cols-2 gap-3">
-            <Input placeholder="Name (Bengali)" value={editing.name_bn} onChange={(e) => setEditing({ ...editing, name_bn: e.target.value })} />
-            <Input placeholder="Name (English)" value={editing.name_en} onChange={(e) => setEditing({ ...editing, name_en: e.target.value })} />
-            <Input placeholder="Role (Bengali)" value={editing.role_bn} onChange={(e) => setEditing({ ...editing, role_bn: e.target.value })} />
-            <Input placeholder="Role (English)" value={editing.role_en} onChange={(e) => setEditing({ ...editing, role_en: e.target.value })} />
+        <div className="glass rounded-xl p-6 space-y-4 max-w-2xl mb-6">
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium mb-1">Name (Bengali)</label>
+              <Input placeholder="বাংলায় নাম" value={editing.name_bn} onChange={(e) => setEditing({ ...editing, name_bn: e.target.value })} />
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-1">Name (English)</label>
+              <Input placeholder="Name in English" value={editing.name_en} onChange={(e) => setEditing({ ...editing, name_en: e.target.value })} />
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-1">Role (Bengali)</label>
+              <Input placeholder="বাংলায় পদবী" value={editing.role_bn} onChange={(e) => setEditing({ ...editing, role_bn: e.target.value })} />
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-1">Role (English)</label>
+              <Input placeholder="Role in English" value={editing.role_en} onChange={(e) => setEditing({ ...editing, role_en: e.target.value })} />
+            </div>
           </div>
-          <textarea placeholder="Text (Bengali)" value={editing.text_bn} onChange={(e) => setEditing({ ...editing, text_bn: e.target.value })} rows={2} className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm" />
-          <textarea placeholder="Text (English)" value={editing.text_en} onChange={(e) => setEditing({ ...editing, text_en: e.target.value })} rows={2} className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm" />
+          <div>
+            <label className="block text-sm font-medium mb-1">Text (Bengali)</label>
+            <textarea placeholder="বাংলায় মন্তব্য লিখুন" value={editing.text_bn} onChange={(e) => setEditing({ ...editing, text_bn: e.target.value })} rows={2} className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm" />
+          </div>
+          <div>
+            <label className="block text-sm font-medium mb-1">Text (English)</label>
+            <textarea placeholder="Write testimonial in English" value={editing.text_en} onChange={(e) => setEditing({ ...editing, text_en: e.target.value })} rows={2} className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm" />
+          </div>
           <div className="flex items-center gap-2">
-            <label className="text-sm">Rating:</label>
+            <label className="text-sm font-medium">Rating:</label>
             {[1,2,3,4,5].map(n => (
               <button key={n} type="button" onClick={() => setEditing({ ...editing, rating: n })}>
                 <Star className={`w-5 h-5 ${n <= editing.rating ? "fill-accent text-accent" : "text-muted-foreground"}`} />

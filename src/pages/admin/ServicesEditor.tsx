@@ -42,13 +42,31 @@ const ServicesEditor = () => {
       </div>
 
       {editing && (
-        <div className="glass rounded-xl p-6 space-y-3 max-w-2xl mb-6">
-          <Input placeholder="Level (e.g. Beginner, Expert)" value={editing.level || ""} onChange={(e) => setEditing({ ...editing, level: e.target.value })} />
-          <Input placeholder="Title" value={editing.title} onChange={(e) => setEditing({ ...editing, title: e.target.value })} />
-          <Input placeholder="Icon name (lucide)" value={editing.icon_name} onChange={(e) => setEditing({ ...editing, icon_name: e.target.value })} />
-          <textarea placeholder="Description (Bengali)" value={editing.description_bn} onChange={(e) => setEditing({ ...editing, description_bn: e.target.value })} rows={3} className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm" />
-          <textarea placeholder="Description (English)" value={editing.description_en} onChange={(e) => setEditing({ ...editing, description_en: e.target.value })} rows={3} className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm" />
-          <Input type="number" placeholder="Sort order" value={editing.sort_order} onChange={(e) => setEditing({ ...editing, sort_order: parseInt(e.target.value) || 0 })} />
+        <div className="glass rounded-xl p-6 space-y-4 max-w-2xl mb-6">
+          <div>
+            <label className="block text-sm font-medium mb-1">Level</label>
+            <Input placeholder="e.g. Beginner, Expert" value={editing.level || ""} onChange={(e) => setEditing({ ...editing, level: e.target.value })} />
+          </div>
+          <div>
+            <label className="block text-sm font-medium mb-1">Title</label>
+            <Input placeholder="Service title" value={editing.title} onChange={(e) => setEditing({ ...editing, title: e.target.value })} />
+          </div>
+          <div>
+            <label className="block text-sm font-medium mb-1">Icon Name (Lucide)</label>
+            <Input placeholder="e.g. PenTool, Palette" value={editing.icon_name} onChange={(e) => setEditing({ ...editing, icon_name: e.target.value })} />
+          </div>
+          <div>
+            <label className="block text-sm font-medium mb-1">Description (Bengali)</label>
+            <textarea placeholder="বাংলায় বিবরণ লিখুন" value={editing.description_bn} onChange={(e) => setEditing({ ...editing, description_bn: e.target.value })} rows={3} className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm" />
+          </div>
+          <div>
+            <label className="block text-sm font-medium mb-1">Description (English)</label>
+            <textarea placeholder="Write description in English" value={editing.description_en} onChange={(e) => setEditing({ ...editing, description_en: e.target.value })} rows={3} className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm" />
+          </div>
+          <div>
+            <label className="block text-sm font-medium mb-1">Sort Order</label>
+            <Input type="number" placeholder="0" value={editing.sort_order} onChange={(e) => setEditing({ ...editing, sort_order: parseInt(e.target.value) || 0 })} />
+          </div>
           <div className="flex gap-2">
             <button onClick={() => handleSave(editing)} className="gradient-bg text-primary-foreground px-4 py-2 rounded-lg text-sm font-medium">Save</button>
             <button onClick={() => setEditing(null)} className="px-4 py-2 rounded-lg text-sm font-medium border border-border hover:bg-muted">Cancel</button>

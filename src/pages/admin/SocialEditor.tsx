@@ -92,7 +92,10 @@ const SocialEditor = () => {
             </span>
             <span className="text-xs text-muted-foreground">({editing.icon_name})</span>
           </div>
-          <Input type="number" placeholder="Sort order" value={editing.sort_order} onChange={(e) => setEditing({ ...editing, sort_order: parseInt(e.target.value) || 0 })} />
+          <div>
+            <label className="block text-sm font-medium mb-1">Sort Order</label>
+            <Input type="number" placeholder="0" value={editing.sort_order} onChange={(e) => setEditing({ ...editing, sort_order: parseInt(e.target.value) || 0 })} />
+          </div>
           <div className="flex gap-2">
             <button onClick={() => handleSave(editing)} className="gradient-bg text-primary-foreground px-4 py-2 rounded-lg text-sm font-medium">Save</button>
             <button onClick={() => setEditing(null)} className="px-4 py-2 rounded-lg text-sm font-medium border border-border hover:bg-muted">Cancel</button>
