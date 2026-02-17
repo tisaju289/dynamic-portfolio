@@ -2,20 +2,14 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useState, useEffect } from "react";
 import { Download } from "lucide-react";
 import heroImage from "@/assets/mk-kopil.png";
-import illustratorLogo from "@/assets/icons/illustrator.png";
-import photoshopLogo from "@/assets/icons/photoshop.png";
 import { useLang } from "@/context/LanguageContext";
-import { useHeroContent, useSiteSettings } from "@/hooks/useSiteContent";
-
-const floatingIcons = [
-  { img: illustratorLogo, label: "Illustrator", delay: 0 },
-  { img: photoshopLogo, label: "Photoshop", delay: 0.3 },
-];
+import { useHeroContent, useSiteSettings, useHeroIcons } from "@/hooks/useSiteContent";
 
 const HeroSection = () => {
   const { t } = useLang();
   const { data: hero } = useHeroContent();
   const { data: settings } = useSiteSettings();
+  const { data: heroIcons = [] } = useHeroIcons();
   const [roleIndex, setRoleIndex] = useState(0);
 
   const defaultRolesBn = ["গ্রাফিক্স ডিজাইনার", "লোগো ডিজাইনার", "ব্র্যান্ড এক্সপার্ট", "ক্রিয়েটিভ আর্টিস্ট"];
@@ -38,6 +32,19 @@ const HeroSection = () => {
 
   const scrollTo = (id: string) => {
     document.querySelector(id)?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  // Position icons around the image dynamically
+  const getIconPosition = (index: number, total: number) => {
+    const positions = [
+      { left: "-16px", bottom: "15%", right: "auto", top: "auto" },
+      { right: "-16px", top: "10%", left: "auto", bottom: "auto" },
+      { right: "-16px", bottom: "20%", left: "auto", top: "auto" },
+      { left: "-16px", top: "10%", right: "auto", bottom: "auto" },
+      { left: "50%", top: "-16px", right: "auto", bottom: "auto", transform: "translateX(-50%)" },
+      { left: "50%", bottom: "-16px", right: "auto", top: "auto", transform: "translateX(-50%)" },
+    ];
+    return positions[index % positions.length];
   };
 
   return (
@@ -105,10 +112,21 @@ const HeroSection = () => {
                 <img src={imgSrc} alt={`${name} - Graphics Designer`} className="w-full h-full object-cover" />
                 <div className="absolute inset-0 bg-gradient-to-t from-foreground/20 to-transparent" />
               </div>
-              {floatingIcons.map((item, i) => (
-                <motion.div key={item.label} initial={{ opacity: 0, scale: 0 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.6 + item.delay, duration: 0.4, ease: "backOut" }} className="absolute" style={{ right: i === 1 ? "-16px" : "auto", left: i === 0 ? "-16px" : "auto", top: i === 1 ? "10%" : "auto", bottom: i === 0 ? "15%" : "auto" }}>
-                  <motion.div animate={{ y: [0, -8, 0] }} transition={{ duration: 3, repeat: Infinity, delay: item.delay, ease: "easeInOut" }} className="w-12 h-12 md:w-14 md:h-14 rounded-xl bg-card/80 backdrop-blur-sm shadow-lg flex items-center justify-center p-2">
-                    <img src={item.img} alt={item.label} className="w-full h-full object-contain" />
+              {heroIcons.map((item: any, i: number) => (
+                <motion.div
+                  key={item.id}
+                  initial={{ opacity: 0, scale: 0 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ delay: 0.6 + i * 0.15, duration: 0.4, ease: "backOut" }}
+                  className="absolute"
+                  style={getIconPosition(i, heroIcons.length)}
+                >
+                  <motion.div
+                    animate={{ y: [0, -8, 0] }}
+                    transition={{ duration: 3, repeat: Infinity, delay: i * 0.3, ease: "easeInOut" }}
+                    className="w-12 h-12 md:w-14 md:h-14 rounded-xl bg-card/80 backdrop-blur-sm shadow-lg flex items-center justify-center p-2"
+                  >
+                    <img src={item.image_url} alt={item.label} className="w-full h-full object-contain" />
                   </motion.div>
                 </motion.div>
               ))}

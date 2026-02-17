@@ -104,6 +104,33 @@ export type Database = {
         }
         Relationships: []
       }
+      hero_icons: {
+        Row: {
+          created_at: string
+          id: string
+          image_url: string
+          label: string
+          sort_order: number | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          image_url?: string
+          label?: string
+          sort_order?: number | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          image_url?: string
+          label?: string
+          sort_order?: number | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       projects: {
         Row: {
           category: string | null
