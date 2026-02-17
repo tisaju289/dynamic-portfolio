@@ -2,11 +2,13 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { Send, CheckCircle } from "lucide-react";
 import { useLang } from "@/context/LanguageContext";
+import { usePortfolioOwner } from "@/context/PortfolioContext";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
 
 const ContactSection = () => {
   const { t } = useLang();
+  const { userId: portfolioOwnerId } = usePortfolioOwner();
   const [form, setForm] = useState({ name: "", email: "", message: "" });
   const [submitted, setSubmitted] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -31,6 +33,7 @@ const ContactSection = () => {
       name: form.name.trim().slice(0, 100),
       email: form.email.trim().slice(0, 255),
       message: form.message.trim().slice(0, 1000),
+      user_id: portfolioOwnerId,
     });
 
     if (error) {

@@ -7,6 +7,7 @@ import { toast } from "@/hooks/use-toast";
 import { useQueryClient } from "@tanstack/react-query";
 import { Trash2, Plus, Save, Users, Briefcase, Award, Star, Target, TrendingUp, Heart, Zap } from "lucide-react";
 import TranslateButton from "@/components/admin/TranslateButton";
+import { useAuth } from "@/hooks/useAuth";
 
 const iconOptions = ["Users", "Briefcase", "Award", "Star", "Target", "TrendingUp", "Heart", "Zap"];
 const iconMap: Record<string, any> = { Users, Briefcase, Award, Star, Target, TrendingUp, Heart, Zap };
@@ -14,6 +15,7 @@ const iconMap: Record<string, any> = { Users, Briefcase, Award, Star, Target, Tr
 const StatsEditor = () => {
   const { data: stats, isLoading } = useStats();
   const queryClient = useQueryClient();
+  const { user } = useAuth();
   const [localStats, setLocalStats] = useState<any[]>([]);
   const [dirty, setDirty] = useState<Set<string>>(new Set());
 
@@ -41,7 +43,7 @@ const StatsEditor = () => {
 
   const addStat = async () => {
     const maxOrder = localStats.length ? Math.max(...localStats.map((s) => s.sort_order || 0)) + 1 : 0;
-    const { error } = await supabase.from("stats").insert({ label_bn: "নতুন", label_en: "New Stat", value: 0, suffix: "+", icon_name: "Star", sort_order: maxOrder });
+    const { error } = await supabase.from("stats").insert({ label_bn: "নতুন", label_en: "New Stat", value: 0, suffix: "+", icon_name: "Star", sort_order: maxOrder, user_id: user?.id });
     if (error) { toast({ title: "Error", description: error.message, variant: "destructive" }); return; }
     queryClient.invalidateQueries({ queryKey: ["stats"] });
   };

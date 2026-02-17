@@ -6,17 +6,19 @@ import { toast } from "@/hooks/use-toast";
 import { useQueryClient } from "@tanstack/react-query";
 import { Plus, Trash2 } from "lucide-react";
 import TranslateButton from "@/components/admin/TranslateButton";
+import { useAuth } from "@/hooks/useAuth";
 
 const ServicesEditor = () => {
   const { data: services = [], isLoading } = useServices();
   const queryClient = useQueryClient();
+  const { user } = useAuth();
   const [editing, setEditing] = useState<any>(null);
 
   const handleSave = async (item: any) => {
     const payload = { title: item.title, description_bn: item.description_bn, description_en: item.description_en, icon_name: item.icon_name, sort_order: item.sort_order || 0, level: item.level || "" };
     const op = item.id
       ? supabase.from("services").update(payload).eq("id", item.id)
-      : supabase.from("services").insert(payload);
+      : supabase.from("services").insert({ ...payload, user_id: user?.id });
     const { error } = await op;
     if (error) { toast({ title: "Error", description: error.message, variant: "destructive" }); return; }
     queryClient.invalidateQueries({ queryKey: ["services"] });

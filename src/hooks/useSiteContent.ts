@@ -1,112 +1,185 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { usePortfolioOwner } from "@/context/PortfolioContext";
 
-export const useHeroContent = () =>
-  useQuery({
-    queryKey: ["hero_content"],
+const useOwnerId = () => usePortfolioOwner().userId;
+
+export const useHeroContent = () => {
+  const userId = useOwnerId();
+  return useQuery({
+    queryKey: ["hero_content", userId],
     queryFn: async () => {
-      const { data } = await supabase.from("hero_content").select("*").limit(1).single();
+      if (!userId) return null;
+      const { data } = await supabase.from("hero_content").select("*").eq("user_id", userId).limit(1).single();
       return data;
     },
+    enabled: !!userId,
   });
+};
 
-export const useHeroIcons = () =>
-  useQuery({
-    queryKey: ["hero_icons"],
+export const useHeroIcons = () => {
+  const userId = useOwnerId();
+  return useQuery({
+    queryKey: ["hero_icons", userId],
     queryFn: async () => {
-      const { data } = await supabase.from("hero_icons").select("*").order("sort_order");
+      if (!userId) return [];
+      const { data } = await supabase.from("hero_icons").select("*").eq("user_id", userId).order("sort_order");
       return data ?? [];
     },
+    enabled: !!userId,
   });
+};
 
-export const useAboutContent = () =>
-  useQuery({
-    queryKey: ["about_content"],
+export const useAboutContent = () => {
+  const userId = useOwnerId();
+  return useQuery({
+    queryKey: ["about_content", userId],
     queryFn: async () => {
-      const { data } = await supabase.from("about_content").select("*").limit(1).single();
+      if (!userId) return null;
+      const { data } = await supabase.from("about_content").select("*").eq("user_id", userId).limit(1).single();
       return data;
     },
+    enabled: !!userId,
   });
+};
 
-export const useSkills = () =>
-  useQuery({
-    queryKey: ["skills"],
+export const useSkills = () => {
+  const userId = useOwnerId();
+  return useQuery({
+    queryKey: ["skills", userId],
     queryFn: async () => {
-      const { data } = await supabase.from("skills").select("*").order("sort_order");
+      if (!userId) return [];
+      const { data } = await supabase.from("skills").select("*").eq("user_id", userId).order("sort_order");
       return data ?? [];
     },
+    enabled: !!userId,
   });
+};
 
-export const useServices = () =>
-  useQuery({
-    queryKey: ["services"],
+export const useServices = () => {
+  const userId = useOwnerId();
+  return useQuery({
+    queryKey: ["services", userId],
     queryFn: async () => {
-      const { data } = await supabase.from("services").select("*").order("sort_order");
+      if (!userId) return [];
+      const { data } = await supabase.from("services").select("*").eq("user_id", userId).order("sort_order");
       return data ?? [];
     },
+    enabled: !!userId,
   });
+};
 
-export const useProjects = () =>
-  useQuery({
-    queryKey: ["projects"],
+export const useProjects = () => {
+  const userId = useOwnerId();
+  return useQuery({
+    queryKey: ["projects", userId],
     queryFn: async () => {
-      const { data } = await supabase.from("projects").select("*").order("sort_order");
+      if (!userId) return [];
+      const { data } = await supabase.from("projects").select("*").eq("user_id", userId).order("sort_order");
       return data ?? [];
     },
+    enabled: !!userId,
   });
+};
 
-export const useTestimonials = () =>
-  useQuery({
-    queryKey: ["testimonials"],
+export const useTestimonials = () => {
+  const userId = useOwnerId();
+  return useQuery({
+    queryKey: ["testimonials", userId],
     queryFn: async () => {
-      const { data } = await supabase.from("testimonials").select("*").order("sort_order");
+      if (!userId) return [];
+      const { data } = await supabase.from("testimonials").select("*").eq("user_id", userId).order("sort_order");
       return data ?? [];
     },
+    enabled: !!userId,
   });
+};
 
-export const useSocialLinks = () =>
-  useQuery({
-    queryKey: ["social_links"],
+export const useSocialLinks = () => {
+  const userId = useOwnerId();
+  return useQuery({
+    queryKey: ["social_links", userId],
     queryFn: async () => {
-      const { data } = await supabase.from("social_links").select("*").order("sort_order");
+      if (!userId) return [];
+      const { data } = await supabase.from("social_links").select("*").eq("user_id", userId).order("sort_order");
       return data ?? [];
     },
+    enabled: !!userId,
   });
+};
 
-export const useSiteSettings = () =>
-  useQuery({
-    queryKey: ["site_settings"],
+export const useSiteSettings = () => {
+  const userId = useOwnerId();
+  return useQuery({
+    queryKey: ["site_settings", userId],
     queryFn: async () => {
-      const { data } = await supabase.from("site_settings").select("*").limit(1).single();
+      if (!userId) return null;
+      const { data } = await supabase.from("site_settings").select("*").eq("user_id", userId).limit(1).single();
       return data;
     },
+    enabled: !!userId,
   });
+};
 
-export const useContactMessages = () =>
-  useQuery({
-    queryKey: ["contact_messages"],
+export const useContactMessages = () => {
+  const userId = useOwnerId();
+  return useQuery({
+    queryKey: ["contact_messages", userId],
     queryFn: async () => {
-      const { data } = await supabase.from("contact_messages").select("*").order("created_at", { ascending: false });
+      if (!userId) return [];
+      const { data } = await supabase.from("contact_messages").select("*").eq("user_id", userId).order("created_at", { ascending: false });
       return data ?? [];
     },
+    enabled: !!userId,
   });
+};
 
-export const useStats = () =>
-  useQuery({
-    queryKey: ["stats"],
+export const useStats = () => {
+  const userId = useOwnerId();
+  return useQuery({
+    queryKey: ["stats", userId],
     queryFn: async () => {
-      const { data } = await supabase.from("stats").select("*").order("sort_order");
+      if (!userId) return [];
+      const { data } = await supabase.from("stats").select("*").eq("user_id", userId).order("sort_order");
       return data ?? [];
     },
+    enabled: !!userId,
   });
+};
 
-export const useBlogPosts = (includeUnpublished = false) =>
-  useQuery({
-    queryKey: ["blog_posts", includeUnpublished],
+export const useBlogPosts = (includeUnpublished = false) => {
+  const userId = useOwnerId();
+  return useQuery({
+    queryKey: ["blog_posts", userId, includeUnpublished],
     queryFn: async () => {
-      let q = supabase.from("blog_posts").select("*").order("created_at", { ascending: false });
+      if (!userId) return [];
+      let q = supabase.from("blog_posts").select("*").eq("user_id", userId).order("created_at", { ascending: false });
       if (!includeUnpublished) q = q.eq("is_published", true);
       const { data } = await q;
+      return data ?? [];
+    },
+    enabled: !!userId,
+  });
+};
+
+// Hook to resolve username to user_id
+export const useProfileByUsername = (username: string | undefined) =>
+  useQuery({
+    queryKey: ["profile", username],
+    queryFn: async () => {
+      if (!username) return null;
+      const { data } = await supabase.from("profiles").select("*").eq("username", username).single();
+      return data;
+    },
+    enabled: !!username,
+  });
+
+// Hook to get all profiles (for home page listing)
+export const useAllProfiles = () =>
+  useQuery({
+    queryKey: ["all_profiles"],
+    queryFn: async () => {
+      const { data } = await supabase.from("profiles").select("*").order("created_at");
       return data ?? [];
     },
   });

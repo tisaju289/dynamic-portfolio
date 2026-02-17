@@ -8,6 +8,7 @@ import { toast } from "@/hooks/use-toast";
 import { useQueryClient } from "@tanstack/react-query";
 import { Plus, Trash2, Pencil } from "lucide-react";
 import TranslateButton from "@/components/admin/TranslateButton";
+import { useAuth } from "@/hooks/useAuth";
 import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription,
 } from "@/components/ui/dialog";
@@ -25,6 +26,7 @@ const emptyProject = {
 const PortfolioEditor = () => {
   const { data: projects = [], isLoading } = useProjects();
   const queryClient = useQueryClient();
+  const { user } = useAuth();
   const [editing, setEditing] = useState<any | null>(null);
   const [isNew, setIsNew] = useState(false);
 
@@ -42,7 +44,7 @@ const PortfolioEditor = () => {
       level: editing.level || "", sort_order: editing.sort_order || 0,
     };
     const op = isNew
-      ? supabase.from("projects").insert(payload)
+      ? supabase.from("projects").insert({ ...payload, user_id: user?.id })
       : supabase.from("projects").update(payload).eq("id", editing.id);
     const { error } = await op;
     if (error) { toast({ title: "Error", description: error.message, variant: "destructive" }); return; }
