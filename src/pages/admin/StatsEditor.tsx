@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { toast } from "@/hooks/use-toast";
 import { useQueryClient } from "@tanstack/react-query";
 import { Trash2, Plus, Save, Users, Briefcase, Award, Star, Target, TrendingUp, Heart, Zap } from "lucide-react";
+import TranslateButton from "@/components/admin/TranslateButton";
 
 const iconOptions = ["Users", "Briefcase", "Award", "Star", "Target", "TrendingUp", "Heart", "Zap"];
 const iconMap: Record<string, any> = { Users, Briefcase, Award, Star, Target, TrendingUp, Heart, Zap };
@@ -80,11 +81,11 @@ const StatsEditor = () => {
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-medium mb-1">Label (Bengali)</label>
+                  <label className="flex items-center gap-2 text-xs font-medium mb-1">Label (Bengali) <TranslateButton sourceText={stat.label_en || ""} targetLang="bn" onTranslated={(t) => updateLocal(stat.id, "label_bn", t)} /></label>
                   <Input value={stat.label_bn || ""} onChange={(e) => updateLocal(stat.id, "label_bn", e.target.value)} />
                 </div>
                 <div>
-                  <label className="block text-xs font-medium mb-1">Label (English)</label>
+                  <label className="flex items-center gap-2 text-xs font-medium mb-1">Label (English) <TranslateButton sourceText={stat.label_bn || ""} targetLang="en" onTranslated={(t) => updateLocal(stat.id, "label_en", t)} /></label>
                   <Input value={stat.label_en || ""} onChange={(e) => updateLocal(stat.id, "label_en", e.target.value)} />
                 </div>
               </div>

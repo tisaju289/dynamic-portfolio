@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { toast } from "@/hooks/use-toast";
 import { useQueryClient } from "@tanstack/react-query";
 import { Plus, Trash2, Star } from "lucide-react";
+import TranslateButton from "@/components/admin/TranslateButton";
 
 const TestimonialsEditor = () => {
   const { data: testimonials = [], isLoading } = useTestimonials();
@@ -42,28 +43,28 @@ const TestimonialsEditor = () => {
         <div className="glass rounded-xl p-6 space-y-4 max-w-2xl mb-6">
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium mb-1">Name (Bengali)</label>
+              <label className="flex items-center gap-2 text-sm font-medium mb-1">Name (Bengali) <TranslateButton sourceText={editing.name_en} targetLang="bn" onTranslated={(t) => setEditing({ ...editing, name_bn: t })} /></label>
               <Input placeholder="বাংলায় নাম" value={editing.name_bn} onChange={(e) => setEditing({ ...editing, name_bn: e.target.value })} />
             </div>
             <div>
-              <label className="block text-sm font-medium mb-1">Name (English)</label>
+              <label className="flex items-center gap-2 text-sm font-medium mb-1">Name (English) <TranslateButton sourceText={editing.name_bn} targetLang="en" onTranslated={(t) => setEditing({ ...editing, name_en: t })} /></label>
               <Input placeholder="Name in English" value={editing.name_en} onChange={(e) => setEditing({ ...editing, name_en: e.target.value })} />
             </div>
             <div>
-              <label className="block text-sm font-medium mb-1">Role (Bengali)</label>
+              <label className="flex items-center gap-2 text-sm font-medium mb-1">Role (Bengali) <TranslateButton sourceText={editing.role_en} targetLang="bn" onTranslated={(t) => setEditing({ ...editing, role_bn: t })} /></label>
               <Input placeholder="বাংলায় পদবী" value={editing.role_bn} onChange={(e) => setEditing({ ...editing, role_bn: e.target.value })} />
             </div>
             <div>
-              <label className="block text-sm font-medium mb-1">Role (English)</label>
+              <label className="flex items-center gap-2 text-sm font-medium mb-1">Role (English) <TranslateButton sourceText={editing.role_bn} targetLang="en" onTranslated={(t) => setEditing({ ...editing, role_en: t })} /></label>
               <Input placeholder="Role in English" value={editing.role_en} onChange={(e) => setEditing({ ...editing, role_en: e.target.value })} />
             </div>
           </div>
           <div>
-            <label className="block text-sm font-medium mb-1">Text (Bengali)</label>
+            <label className="flex items-center gap-2 text-sm font-medium mb-1">Text (Bengali) <TranslateButton sourceText={editing.text_en} targetLang="bn" onTranslated={(t) => setEditing({ ...editing, text_bn: t })} /></label>
             <textarea placeholder="বাংলায় মন্তব্য লিখুন" value={editing.text_bn} onChange={(e) => setEditing({ ...editing, text_bn: e.target.value })} rows={2} className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm" />
           </div>
           <div>
-            <label className="block text-sm font-medium mb-1">Text (English)</label>
+            <label className="flex items-center gap-2 text-sm font-medium mb-1">Text (English) <TranslateButton sourceText={editing.text_bn} targetLang="en" onTranslated={(t) => setEditing({ ...editing, text_en: t })} /></label>
             <textarea placeholder="Write testimonial in English" value={editing.text_en} onChange={(e) => setEditing({ ...editing, text_en: e.target.value })} rows={2} className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm" />
           </div>
           <div className="flex items-center gap-2">
