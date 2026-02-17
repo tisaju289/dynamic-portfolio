@@ -5,15 +5,16 @@ import { Input } from "@/components/ui/input";
 import { toast } from "@/hooks/use-toast";
 import { useQueryClient } from "@tanstack/react-query";
 import { Upload } from "lucide-react";
+import ImageUpload from "@/components/admin/ImageUpload";
 
 const SettingsEditor = () => {
   const { data, isLoading } = useSiteSettings();
   const queryClient = useQueryClient();
-  const [form, setForm] = useState({ site_name: "", whatsapp_number: "", cv_url: "" });
+  const [form, setForm] = useState({ site_name: "", whatsapp_number: "", cv_url: "", logo_url: "" });
   const [uploading, setUploading] = useState(false);
 
   useEffect(() => {
-    if (data) setForm({ site_name: data.site_name || "", whatsapp_number: data.whatsapp_number || "", cv_url: data.cv_url || "" });
+    if (data) setForm({ site_name: data.site_name || "", whatsapp_number: data.whatsapp_number || "", cv_url: data.cv_url || "", logo_url: (data as any).logo_url || "" });
   }, [data]);
 
   const handleCvUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -47,6 +48,10 @@ const SettingsEditor = () => {
         <div>
           <label className="block text-sm font-medium mb-1">Site Name</label>
           <Input value={form.site_name} onChange={(e) => setForm({ ...form, site_name: e.target.value })} />
+        </div>
+        <div>
+          <label className="block text-sm font-medium mb-1">Logo</label>
+          <ImageUpload value={form.logo_url} onChange={(url) => setForm({ ...form, logo_url: url })} folder="logo" />
         </div>
         <div>
           <label className="block text-sm font-medium mb-1">WhatsApp Number (with country code)</label>

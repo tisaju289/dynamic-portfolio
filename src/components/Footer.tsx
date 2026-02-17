@@ -1,6 +1,6 @@
 import { Facebook, Instagram, Globe, Mail } from "lucide-react";
 import { useLang } from "@/context/LanguageContext";
-import { useSocialLinks } from "@/hooks/useSiteContent";
+import { useSocialLinks, useSiteSettings } from "@/hooks/useSiteContent";
 
 const iconMap: Record<string, any> = { Facebook, Instagram, Globe, Mail };
 
@@ -14,6 +14,7 @@ const defaultLinks = [
 const Footer = () => {
   const { t } = useLang();
   const { data: dbLinks } = useSocialLinks();
+  const { data: settings } = useSiteSettings();
 
   const links = dbLinks && dbLinks.length > 0
     ? dbLinks.map((l: any) => ({ icon: iconMap[l.icon_name] || Globe, label: l.platform, href: l.url }))
@@ -22,7 +23,10 @@ const Footer = () => {
   return (
     <footer className="py-12 border-t border-border">
       <div className="container mx-auto px-4 text-center">
-        <a href="#home" className="text-2xl font-bold gradient-text inline-block mb-6">MK Kopil</a>
+        <a href="#home" className="text-2xl font-bold gradient-text inline-block mb-6 flex items-center justify-center gap-2">
+          {(settings as any)?.logo_url && <img src={(settings as any).logo_url} alt="Logo" className="w-8 h-8 object-contain rounded" />}
+          {settings?.site_name || "MK Kopil"}
+        </a>
         <div className="flex justify-center gap-4 mb-6">
           {links.map((s: any) => (
             <a key={s.label} href={s.href} target={s.href.startsWith("http") ? "_blank" : undefined} rel={s.href.startsWith("http") ? "noopener noreferrer" : undefined} aria-label={s.label} className="w-10 h-10 rounded-full bg-muted flex items-center justify-center text-muted-foreground hover:gradient-bg hover:text-primary-foreground transition-all duration-200">
