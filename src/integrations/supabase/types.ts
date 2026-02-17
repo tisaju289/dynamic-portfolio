@@ -153,6 +153,7 @@ export type Database = {
           description_en: string | null
           icon_name: string | null
           id: string
+          level: string | null
           sort_order: number | null
           title: string
           updated_at: string
@@ -163,6 +164,7 @@ export type Database = {
           description_en?: string | null
           icon_name?: string | null
           id?: string
+          level?: string | null
           sort_order?: number | null
           title: string
           updated_at?: string
@@ -173,6 +175,7 @@ export type Database = {
           description_en?: string | null
           icon_name?: string | null
           id?: string
+          level?: string | null
           sort_order?: number | null
           title?: string
           updated_at?: string
