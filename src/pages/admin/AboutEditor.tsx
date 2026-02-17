@@ -4,10 +4,41 @@ import { supabase } from "@/integrations/supabase/client";
 import { Input } from "@/components/ui/input";
 import { toast } from "@/hooks/use-toast";
 import { useQueryClient } from "@tanstack/react-query";
-import { Palette, Layers, Share2, Printer, PenTool, Image, Monitor, Smartphone, Globe, Brush, Camera, Type, Figma, Code, Zap, Star, Heart, Award, Target, TrendingUp, Trash2, Plus, GripVertical } from "lucide-react";
+import { Palette, Layers, Share2, Printer, PenTool, Image, Monitor, Smartphone, Globe, Brush, Camera, Type, Code, Zap, Star, Heart, Award, Target, TrendingUp, Trash2, Plus, Upload } from "lucide-react";
 
 const availableIcons: Record<string, any> = {
   Palette, Layers, Share2, Printer, PenTool, Image, Monitor, Smartphone, Globe, Brush, Camera, Type, Code, Zap, Star, Heart, Award, Target, TrendingUp
+};
+
+const SkillIconDropZone = ({ skillId, onUploaded }: { skillId: string; onUploaded: (url: string) => void }) => {
+  const [dragging, setDragging] = useState(false);
+  const [uploading, setUploading] = useState(false);
+
+  const uploadFile = async (file: File) => {
+    setUploading(true);
+    const ext = file.name.split(".").pop();
+    const path = `skill-icons/${skillId}-${Date.now()}.${ext}`;
+    const { error } = await supabase.storage.from("portfolio-assets").upload(path, file);
+    if (error) { toast({ title: "Upload failed", description: error.message, variant: "destructive" }); setUploading(false); return; }
+    const { data: { publicUrl } } = supabase.storage.from("portfolio-assets").getPublicUrl(path);
+    onUploaded(publicUrl);
+    setUploading(false);
+  };
+
+  return (
+    <div
+      onDragOver={(e) => { e.preventDefault(); setDragging(true); }}
+      onDragLeave={() => setDragging(false)}
+      onDrop={(e) => { e.preventDefault(); setDragging(false); const file = e.dataTransfer.files[0]; if (file) uploadFile(file); }}
+      className={`mt-1 border-2 border-dashed rounded-lg p-3 text-center text-xs transition-colors cursor-pointer ${dragging ? "border-primary bg-primary/10" : "border-border text-muted-foreground hover:border-primary/50"}`}
+    >
+      <label className="cursor-pointer flex items-center justify-center gap-2">
+        <Upload className="w-3 h-3" />
+        {uploading ? "Uploading..." : "Drag & drop icon image here, or click to browse"}
+        <input type="file" accept="image/*" onChange={(e) => { const f = e.target.files?.[0]; if (f) uploadFile(f); }} className="hidden" disabled={uploading} />
+      </label>
+    </div>
+  );
 };
 
 const AboutEditor = () => {
@@ -84,12 +115,17 @@ const AboutEditor = () => {
       <div className="space-y-4 max-w-2xl">
         {skillsLoading ? <p>Loading skills...</p> : skills?.map((skill: any) => {
           const IconComp = availableIcons[skill.icon_name] || Palette;
+          const hasCustomImage = !!(skill as any).icon_image_url;
           return (
             <div key={skill.id} className="glass rounded-xl p-5 space-y-3">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 gradient-bg rounded-lg flex items-center justify-center">
-                    <IconComp className="w-5 h-5 text-primary-foreground" />
+                  <div className="w-10 h-10 gradient-bg rounded-lg flex items-center justify-center overflow-hidden">
+                    {hasCustomImage ? (
+                      <img src={(skill as any).icon_image_url} alt={skill.title} className="w-full h-full object-cover" />
+                    ) : (
+                      <IconComp className="w-5 h-5 text-primary-foreground" />
+                    )}
                   </div>
                   <span className="font-semibold">{skill.title}</span>
                 </div>
@@ -103,7 +139,7 @@ const AboutEditor = () => {
                   <Input defaultValue={skill.title} onBlur={(e) => updateSkill(skill.id, "title", e.target.value)} />
                 </div>
                 <div>
-                  <label className="block text-xs font-medium mb-1">Icon</label>
+                  <label className="block text-xs font-medium mb-1">Lucide Icon (fallback)</label>
                   <select
                     defaultValue={skill.icon_name || "Palette"}
                     onChange={(e) => updateSkill(skill.id, "icon_name", e.target.value)}
@@ -115,6 +151,34 @@ const AboutEditor = () => {
                   </select>
                 </div>
               </div>
+
+              {/* Custom Icon Image - Drag & Drop + URL */}
+              <div>
+                <label className="block text-xs font-medium mb-1">Custom Icon Image (drag & drop or paste URL)</label>
+                <div className="flex gap-2 items-start">
+                  <div className="flex-1">
+                    <Input
+                      placeholder="Paste image URL here..."
+                      defaultValue={(skill as any).icon_image_url || ""}
+                      onBlur={(e) => updateSkill(skill.id, "icon_image_url", e.target.value)}
+                    />
+                  </div>
+                  {hasCustomImage && (
+                    <button
+                      onClick={() => updateSkill(skill.id, "icon_image_url", "")}
+                      className="text-xs text-destructive hover:underline mt-2"
+                    >Remove</button>
+                  )}
+                </div>
+                <SkillIconDropZone
+                  skillId={skill.id}
+                  onUploaded={(url) => {
+                    updateSkill(skill.id, "icon_image_url", url);
+                    queryClient.invalidateQueries({ queryKey: ["skills"] });
+                  }}
+                />
+              </div>
+
               <div>
                 <label className="block text-xs font-medium mb-1">Description (Bengali)</label>
                 <Input defaultValue={skill.description_bn || ""} onBlur={(e) => updateSkill(skill.id, "description_bn", e.target.value)} />

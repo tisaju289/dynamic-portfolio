@@ -34,8 +34,8 @@ const AboutSection = () => {
       );
 
   const skills = dbSkills && dbSkills.length > 0
-    ? dbSkills.map((s: any) => ({ icon: iconMap[s.icon_name] || Palette, title: s.title, desc: t(s.description_bn || "", s.description_en || "") }))
-    : defaultSkills.map((s) => ({ icon: s.icon, title: s.title, desc: t(s.desc_bn, s.desc_en) }));
+    ? dbSkills.map((s: any) => ({ icon: iconMap[s.icon_name] || Palette, iconImage: s.icon_image_url || "", title: s.title, desc: t(s.description_bn || "", s.description_en || "") }))
+    : defaultSkills.map((s) => ({ icon: s.icon, iconImage: "", title: s.title, desc: t(s.desc_bn, s.desc_en) }));
 
   return (
     <section id="about" className="py-24">
@@ -47,8 +47,12 @@ const AboutSection = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {skills.map((skill: any, i: number) => (
             <motion.div key={skill.title} custom={i} variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }} className="glass rounded-2xl p-6 text-center hover:-translate-y-1 hover:shadow-lg transition-all duration-200">
-              <div className="w-14 h-14 mx-auto mb-4 gradient-bg rounded-xl flex items-center justify-center">
-                <skill.icon className="w-7 h-7 text-primary-foreground" />
+              <div className="w-14 h-14 mx-auto mb-4 gradient-bg rounded-xl flex items-center justify-center overflow-hidden">
+                {skill.iconImage ? (
+                  <img src={skill.iconImage} alt={skill.title} className="w-full h-full object-cover" />
+                ) : (
+                  <skill.icon className="w-7 h-7 text-primary-foreground" />
+                )}
               </div>
               <h3 className="font-bold text-lg mb-2">{skill.title}</h3>
               <p className="text-muted-foreground text-sm">{skill.desc}</p>
