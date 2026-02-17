@@ -1,9 +1,9 @@
 import { motion } from "framer-motion";
-import { Palette, Layers, Share2, Printer } from "lucide-react";
+import { Palette, Layers, Share2, Printer, PenTool, Image, Monitor, Smartphone, Globe, Brush, Camera, Type, Code, Zap, Star, Heart, Award, Target, TrendingUp } from "lucide-react";
 import { useLang } from "@/context/LanguageContext";
 import { useAboutContent, useSkills } from "@/hooks/useSiteContent";
 
-const iconMap: Record<string, any> = { Palette, Layers, Share2, Printer };
+const iconMap: Record<string, any> = { Palette, Layers, Share2, Printer, PenTool, Image, Monitor, Smartphone, Globe, Brush, Camera, Type, Code, Zap, Star, Heart, Award, Target, TrendingUp };
 
 const fadeUp = {
   hidden: { opacity: 0, y: 30 },
