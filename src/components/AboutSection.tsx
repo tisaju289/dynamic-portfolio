@@ -46,7 +46,7 @@ const AboutSection = () => {
         </motion.div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {skills.map((skill: any, i: number) => (
-            <motion.div key={skill.title} custom={i} variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }} className="glass rounded-2xl p-6 text-center hover:-translate-y-1 hover:shadow-lg transition-all duration-200">
+            <motion.div key={skill.title} custom={i} variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }} className="glass rounded-2xl p-6 text-center tilt-card hover:shadow-lg transition-all duration-200">
               <div className="w-14 h-14 mx-auto mb-4 gradient-bg rounded-xl flex items-center justify-center overflow-hidden">
                 {skill.iconImage ? (
                   <img src={skill.iconImage} alt={skill.title} className="w-full h-full object-cover" />

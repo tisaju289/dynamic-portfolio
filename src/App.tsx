@@ -16,6 +16,8 @@ import TestimonialsEditor from "./pages/admin/TestimonialsEditor";
 import ContactEditor from "./pages/admin/ContactEditor";
 import SocialEditor from "./pages/admin/SocialEditor";
 import SettingsEditor from "./pages/admin/SettingsEditor";
+import StatsEditor from "./pages/admin/StatsEditor";
+import BlogEditor from "./pages/admin/BlogEditor";
 
 const queryClient = new QueryClient();
 
@@ -38,6 +40,8 @@ const App = () => (
             <Route path="contact" element={<ContactEditor />} />
             <Route path="social" element={<SocialEditor />} />
             <Route path="settings" element={<SettingsEditor />} />
+            <Route path="stats" element={<StatsEditor />} />
+            <Route path="blog" element={<BlogEditor />} />
           </Route>
           <Route path="*" element={<NotFound />} />
         </Routes>

@@ -44,6 +44,54 @@ export type Database = {
         }
         Relationships: []
       }
+      blog_posts: {
+        Row: {
+          content_bn: string | null
+          content_en: string | null
+          cover_image_url: string | null
+          created_at: string | null
+          excerpt_bn: string | null
+          excerpt_en: string | null
+          id: string
+          is_published: boolean | null
+          slug: string
+          sort_order: number | null
+          title_bn: string | null
+          title_en: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          content_bn?: string | null
+          content_en?: string | null
+          cover_image_url?: string | null
+          created_at?: string | null
+          excerpt_bn?: string | null
+          excerpt_en?: string | null
+          id?: string
+          is_published?: boolean | null
+          slug: string
+          sort_order?: number | null
+          title_bn?: string | null
+          title_en?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          content_bn?: string | null
+          content_en?: string | null
+          cover_image_url?: string | null
+          created_at?: string | null
+          excerpt_bn?: string | null
+          excerpt_en?: string | null
+          id?: string
+          is_published?: boolean | null
+          slug?: string
+          sort_order?: number | null
+          title_bn?: string | null
+          title_en?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       contact_messages: {
         Row: {
           created_at: string
@@ -320,6 +368,42 @@ export type Database = {
           sort_order?: number | null
           updated_at?: string
           url?: string | null
+        }
+        Relationships: []
+      }
+      stats: {
+        Row: {
+          created_at: string | null
+          icon_name: string | null
+          id: string
+          label_bn: string | null
+          label_en: string | null
+          sort_order: number | null
+          suffix: string | null
+          updated_at: string | null
+          value: number | null
+        }
+        Insert: {
+          created_at?: string | null
+          icon_name?: string | null
+          id?: string
+          label_bn?: string | null
+          label_en?: string | null
+          sort_order?: number | null
+          suffix?: string | null
+          updated_at?: string | null
+          value?: number | null
+        }
+        Update: {
+          created_at?: string | null
+          icon_name?: string | null
+          id?: string
+          label_bn?: string | null
+          label_en?: string | null
+          sort_order?: number | null
+          suffix?: string | null
+          updated_at?: string | null
+          value?: number | null
         }
         Relationships: []
       }
