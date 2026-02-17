@@ -125,7 +125,7 @@ const SettingsEditor = () => {
   return (
     <div>
       <h1 className="text-2xl font-bold text-heading mb-6">Site Settings</h1>
-      <div className="space-y-6 max-w-lg">
+      <div className="space-y-6 max-w-lg w-full">
         {/* General Settings */}
         <div className="glass rounded-xl p-6 space-y-4">
           <h2 className="text-lg font-semibold text-heading">General</h2>
@@ -162,7 +162,7 @@ const SettingsEditor = () => {
           {/* Pre-made Themes */}
           <div>
             <label className="block text-sm font-medium mb-2">Theme Preset</label>
-            <div className="grid grid-cols-4 gap-2">
+            <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
               {Object.entries(presetColors).map(([name, color]) => (
                 <button
                   key={name}

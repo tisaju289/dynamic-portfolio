@@ -1,7 +1,9 @@
-import { Home, User, Briefcase, FolderOpen, MessageSquare, Mail, Share2, Settings, LogOut, BarChart3, FileText } from "lucide-react";
-import { NavLink, useNavigate } from "react-router-dom";
+import { Home, User, Briefcase, FolderOpen, MessageSquare, Mail, Share2, Settings, LogOut, BarChart3, FileText, Menu } from "lucide-react";
+import { NavLink, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { useSiteSettings } from "@/hooks/useSiteContent";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import { useState, useEffect } from "react";
 
 const links = [
   { to: "/admin", icon: Home, label: "Dashboard", end: true },
@@ -17,9 +19,8 @@ const links = [
   { to: "/admin/settings", icon: Settings, label: "Settings" },
 ];
 
-const AdminSidebar = () => {
+const SidebarNav = ({ onNavigate }: { onNavigate?: () => void }) => {
   const { signOut } = useAuth();
-  const { data: settings } = useSiteSettings();
   const navigate = useNavigate();
 
   const handleLogout = async () => {
@@ -28,18 +29,14 @@ const AdminSidebar = () => {
   };
 
   return (
-    <aside className="w-64 min-h-screen bg-card border-r border-border flex flex-col">
-      <div className="p-6 border-b border-border">
-        <h2 className="text-lg font-bold text-heading">Admin Panel</h2>
-        <p className="text-xs text-muted-foreground mt-1">{settings?.site_name || "MK Kopil"} Portfolio</p>
-      </div>
-
-      <nav className="flex-1 p-4 space-y-1">
+    <>
+      <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
         {links.map((link) => (
           <NavLink
             key={link.to}
             to={link.to}
             end={link.end}
+            onClick={onNavigate}
             className={({ isActive }) =>
               `flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
                 isActive
@@ -48,12 +45,11 @@ const AdminSidebar = () => {
               }`
             }
           >
-            <link.icon className="w-4 h-4" />
+            <link.icon className="w-4 h-4 flex-shrink-0" />
             {link.label}
           </NavLink>
         ))}
       </nav>
-
       <div className="p-4 border-t border-border">
         <button
           onClick={handleLogout}
@@ -63,7 +59,50 @@ const AdminSidebar = () => {
           Logout
         </button>
       </div>
-    </aside>
+    </>
+  );
+};
+
+const AdminSidebar = () => {
+  const { data: settings } = useSiteSettings();
+  const [open, setOpen] = useState(false);
+  const location = useLocation();
+
+  // Close sheet on route change
+  useEffect(() => {
+    setOpen(false);
+  }, [location.pathname]);
+
+  return (
+    <>
+      {/* Mobile top bar */}
+      <div className="lg:hidden fixed top-0 left-0 right-0 z-40 bg-card border-b border-border flex items-center gap-3 px-4 py-3">
+        <Sheet open={open} onOpenChange={setOpen}>
+          <SheetTrigger asChild>
+            <button className="p-2 rounded-lg hover:bg-muted transition-colors">
+              <Menu className="w-5 h-5" />
+            </button>
+          </SheetTrigger>
+          <SheetContent side="left" className="w-72 p-0 flex flex-col">
+            <SheetHeader className="p-6 border-b border-border">
+              <SheetTitle className="text-lg font-bold text-heading text-left">Admin Panel</SheetTitle>
+              <p className="text-xs text-muted-foreground">{settings?.site_name || "MK Kopil"} Portfolio</p>
+            </SheetHeader>
+            <SidebarNav onNavigate={() => setOpen(false)} />
+          </SheetContent>
+        </Sheet>
+        <h2 className="text-sm font-bold text-heading">Admin Panel</h2>
+      </div>
+
+      {/* Desktop sidebar */}
+      <aside className="hidden lg:flex w-64 min-h-screen bg-card border-r border-border flex-col flex-shrink-0">
+        <div className="p-6 border-b border-border">
+          <h2 className="text-lg font-bold text-heading">Admin Panel</h2>
+          <p className="text-xs text-muted-foreground mt-1">{settings?.site_name || "MK Kopil"} Portfolio</p>
+        </div>
+        <SidebarNav />
+      </aside>
+    </>
   );
 };
 
