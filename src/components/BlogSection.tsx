@@ -92,9 +92,10 @@ const BlogSection = () => {
                   {selectedPost && t(selectedPost.excerpt_bn, selectedPost.excerpt_en)}
                 </DialogDescription>
               </DialogHeader>
-              <div className="mt-4 text-sm leading-relaxed whitespace-pre-wrap text-foreground">
-                {selectedPost && t(selectedPost.content_bn, selectedPost.content_en)}
-              </div>
+              <div 
+                className="mt-4 text-sm leading-relaxed text-foreground prose prose-sm dark:prose-invert max-w-none"
+                dangerouslySetInnerHTML={{ __html: selectedPost ? t(selectedPost.content_bn, selectedPost.content_en) : "" }}
+              />
               {selectedPost && (
                 <div className="mt-6 pt-4 border-t border-border flex items-center gap-3">
                   <span className="text-xs text-muted-foreground">{t("শেয়ার করুন:", "Share:")}</span>

@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { toast } from "@/hooks/use-toast";
 import { useQueryClient } from "@tanstack/react-query";
 import { Trash2, Plus, Eye, EyeOff, Pencil } from "lucide-react";
+import TranslateButton from "@/components/admin/TranslateButton";
 import ImageUpload from "@/components/admin/ImageUpload";
 import RichTextEditor from "@/components/admin/RichTextEditor";
 import {
@@ -148,11 +149,11 @@ const BlogEditor = () => {
               </DialogHeader>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-medium mb-1">Title (Bengali)</label>
+                  <label className="flex items-center gap-2 text-xs font-medium mb-1">Title (Bengali) <TranslateButton sourceText={editing?.title_en || ""} targetLang="bn" onTranslated={(t) => setEditing({ ...editing, title_bn: t })} /></label>
                   <Input value={editing?.title_bn || ""} onChange={(e) => setEditing({ ...editing, title_bn: e.target.value })} />
                 </div>
                 <div>
-                  <label className="block text-xs font-medium mb-1">Title (English)</label>
+                  <label className="flex items-center gap-2 text-xs font-medium mb-1">Title (English) <TranslateButton sourceText={editing?.title_bn || ""} targetLang="en" onTranslated={(t) => setEditing({ ...editing, title_en: t })} /></label>
                   <Input value={editing?.title_en || ""} onChange={(e) => setEditing({ ...editing, title_en: e.target.value })} />
                 </div>
               </div>
@@ -166,20 +167,20 @@ const BlogEditor = () => {
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-medium mb-1">Excerpt (Bengali)</label>
+                  <label className="flex items-center gap-2 text-xs font-medium mb-1">Excerpt (Bengali) <TranslateButton sourceText={editing?.excerpt_en || ""} targetLang="bn" onTranslated={(t) => setEditing({ ...editing, excerpt_bn: t })} /></label>
                   <textarea value={editing?.excerpt_bn || ""} onChange={(e) => setEditing({ ...editing, excerpt_bn: e.target.value })} rows={2} className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm" />
                 </div>
                 <div>
-                  <label className="block text-xs font-medium mb-1">Excerpt (English)</label>
+                  <label className="flex items-center gap-2 text-xs font-medium mb-1">Excerpt (English) <TranslateButton sourceText={editing?.excerpt_bn || ""} targetLang="en" onTranslated={(t) => setEditing({ ...editing, excerpt_en: t })} /></label>
                   <textarea value={editing?.excerpt_en || ""} onChange={(e) => setEditing({ ...editing, excerpt_en: e.target.value })} rows={2} className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm" />
                 </div>
               </div>
               <div>
-                <label className="block text-xs font-medium mb-1">Content (Bengali)</label>
+                <label className="flex items-center gap-2 text-xs font-medium mb-1">Content (Bengali) <TranslateButton sourceText={editing?.content_en || ""} targetLang="bn" onTranslated={(t) => setEditing({ ...editing, content_bn: t })} /></label>
                 <RichTextEditor value={editing?.content_bn || ""} onChange={(html) => setEditing({ ...editing, content_bn: html })} />
               </div>
               <div>
-                <label className="block text-xs font-medium mb-1">Content (English)</label>
+                <label className="flex items-center gap-2 text-xs font-medium mb-1">Content (English) <TranslateButton sourceText={editing?.content_bn || ""} targetLang="en" onTranslated={(t) => setEditing({ ...editing, content_en: t })} /></label>
                 <RichTextEditor value={editing?.content_en || ""} onChange={(html) => setEditing({ ...editing, content_en: html })} />
               </div>
               <div className="flex items-center gap-3">

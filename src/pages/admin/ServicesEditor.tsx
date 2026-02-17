@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { toast } from "@/hooks/use-toast";
 import { useQueryClient } from "@tanstack/react-query";
 import { Plus, Trash2 } from "lucide-react";
+import TranslateButton from "@/components/admin/TranslateButton";
 
 const ServicesEditor = () => {
   const { data: services = [], isLoading } = useServices();
@@ -56,11 +57,11 @@ const ServicesEditor = () => {
             <Input placeholder="e.g. PenTool, Palette" value={editing.icon_name} onChange={(e) => setEditing({ ...editing, icon_name: e.target.value })} />
           </div>
           <div>
-            <label className="block text-sm font-medium mb-1">Description (Bengali)</label>
+            <label className="flex items-center gap-2 text-sm font-medium mb-1">Description (Bengali) <TranslateButton sourceText={editing.description_en} targetLang="bn" onTranslated={(t) => setEditing({ ...editing, description_bn: t })} /></label>
             <textarea placeholder="বাংলায় বিবরণ লিখুন" value={editing.description_bn} onChange={(e) => setEditing({ ...editing, description_bn: e.target.value })} rows={3} className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm" />
           </div>
           <div>
-            <label className="block text-sm font-medium mb-1">Description (English)</label>
+            <label className="flex items-center gap-2 text-sm font-medium mb-1">Description (English) <TranslateButton sourceText={editing.description_bn} targetLang="en" onTranslated={(t) => setEditing({ ...editing, description_en: t })} /></label>
             <textarea placeholder="Write description in English" value={editing.description_en} onChange={(e) => setEditing({ ...editing, description_en: e.target.value })} rows={3} className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm" />
           </div>
           <div>

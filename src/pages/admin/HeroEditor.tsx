@@ -6,6 +6,7 @@ import ImageUpload from "@/components/admin/ImageUpload";
 import { toast } from "@/hooks/use-toast";
 import { useQueryClient } from "@tanstack/react-query";
 import { Plus, Trash2 } from "lucide-react";
+import TranslateButton from "@/components/admin/TranslateButton";
 
 const HeroEditor = () => {
   const { data, isLoading } = useHeroContent();
@@ -80,19 +81,19 @@ const HeroEditor = () => {
           <Input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
         </div>
         <div>
-          <label className="block text-sm font-medium mb-1">Subtitle (Bengali)</label>
+          <label className="flex items-center gap-2 text-sm font-medium mb-1">Subtitle (Bengali) <TranslateButton sourceText={form.subtitle_en} targetLang="bn" onTranslated={(t) => setForm({ ...form, subtitle_bn: t })} /></label>
           <Input value={form.subtitle_bn} onChange={(e) => setForm({ ...form, subtitle_bn: e.target.value })} />
         </div>
         <div>
-          <label className="block text-sm font-medium mb-1">Subtitle (English)</label>
+          <label className="flex items-center gap-2 text-sm font-medium mb-1">Subtitle (English) <TranslateButton sourceText={form.subtitle_bn} targetLang="en" onTranslated={(t) => setForm({ ...form, subtitle_en: t })} /></label>
           <Input value={form.subtitle_en} onChange={(e) => setForm({ ...form, subtitle_en: e.target.value })} />
         </div>
         <div>
-          <label className="block text-sm font-medium mb-1">Roles Bengali (comma separated)</label>
+          <label className="flex items-center gap-2 text-sm font-medium mb-1">Roles Bengali (comma separated) <TranslateButton sourceText={form.roles_en} targetLang="bn" onTranslated={(t) => setForm({ ...form, roles_bn: t })} /></label>
           <Input value={form.roles_bn} onChange={(e) => setForm({ ...form, roles_bn: e.target.value })} placeholder="গ্রাফিক্স ডিজাইনার, লোগো ডিজাইনার" />
         </div>
         <div>
-          <label className="block text-sm font-medium mb-1">Roles English (comma separated)</label>
+          <label className="flex items-center gap-2 text-sm font-medium mb-1">Roles English (comma separated) <TranslateButton sourceText={form.roles_bn} targetLang="en" onTranslated={(t) => setForm({ ...form, roles_en: t })} /></label>
           <Input value={form.roles_en} onChange={(e) => setForm({ ...form, roles_en: e.target.value })} placeholder="Graphics Designer, Logo Designer" />
         </div>
         <div>

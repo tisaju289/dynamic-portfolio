@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { toast } from "@/hooks/use-toast";
 import { useQueryClient } from "@tanstack/react-query";
 import { Palette, Layers, Share2, Printer, PenTool, Image, Monitor, Smartphone, Globe, Brush, Camera, Type, Code, Zap, Star, Heart, Award, Target, TrendingUp, Trash2, Plus, Upload, Save } from "lucide-react";
+import TranslateButton from "@/components/admin/TranslateButton";
 
 const availableIcons: Record<string, any> = {
   Palette, Layers, Share2, Printer, PenTool, Image, Monitor, Smartphone, Globe, Brush, Camera, Type, Code, Zap, Star, Heart, Award, Target, TrendingUp
@@ -109,19 +110,19 @@ const AboutEditor = () => {
       <h1 className="text-2xl font-bold text-heading mb-6">About Section</h1>
       <div className="glass rounded-xl p-6 space-y-4 max-w-2xl mb-8">
         <div>
-          <label className="block text-sm font-medium mb-1">Title (Bengali)</label>
+          <label className="flex items-center gap-2 text-sm font-medium mb-1">Title (Bengali) <TranslateButton sourceText={form.title_en} targetLang="bn" onTranslated={(t) => setForm({ ...form, title_bn: t })} /></label>
           <Input value={form.title_bn} onChange={(e) => setForm({ ...form, title_bn: e.target.value })} />
         </div>
         <div>
-          <label className="block text-sm font-medium mb-1">Title (English)</label>
+          <label className="flex items-center gap-2 text-sm font-medium mb-1">Title (English) <TranslateButton sourceText={form.title_bn} targetLang="en" onTranslated={(t) => setForm({ ...form, title_en: t })} /></label>
           <Input value={form.title_en} onChange={(e) => setForm({ ...form, title_en: e.target.value })} />
         </div>
         <div>
-          <label className="block text-sm font-medium mb-1">Description (Bengali)</label>
+          <label className="flex items-center gap-2 text-sm font-medium mb-1">Description (Bengali) <TranslateButton sourceText={form.description_en} targetLang="bn" onTranslated={(t) => setForm({ ...form, description_bn: t })} /></label>
           <textarea value={form.description_bn} onChange={(e) => setForm({ ...form, description_bn: e.target.value })} rows={4} className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm" />
         </div>
         <div>
-          <label className="block text-sm font-medium mb-1">Description (English)</label>
+          <label className="flex items-center gap-2 text-sm font-medium mb-1">Description (English) <TranslateButton sourceText={form.description_bn} targetLang="en" onTranslated={(t) => setForm({ ...form, description_en: t })} /></label>
           <textarea value={form.description_en} onChange={(e) => setForm({ ...form, description_en: e.target.value })} rows={4} className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm" />
         </div>
         <button onClick={handleSave} className="gradient-bg text-primary-foreground px-6 py-2.5 rounded-lg font-semibold hover:shadow-lg transition-all">Save Changes</button>
