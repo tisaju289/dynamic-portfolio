@@ -1,8 +1,9 @@
 import { motion } from "framer-motion";
-import { Calendar, ArrowRight } from "lucide-react";
+import { Calendar, ArrowRight, Facebook, MessageCircle, Link2, Check } from "lucide-react";
 import { useLang } from "@/context/LanguageContext";
 import { useBlogPosts } from "@/hooks/useSiteContent";
 import { useState } from "react";
+import { toast } from "sonner";
 import {
   Dialog,
   DialogContent,
@@ -94,6 +95,41 @@ const BlogSection = () => {
               <div className="mt-4 text-sm leading-relaxed whitespace-pre-wrap text-foreground">
                 {selectedPost && t(selectedPost.content_bn, selectedPost.content_en)}
               </div>
+              {selectedPost && (
+                <div className="mt-6 pt-4 border-t border-border flex items-center gap-3">
+                  <span className="text-xs text-muted-foreground">{t("শেয়ার করুন:", "Share:")}</span>
+                  <button
+                    onClick={() => {
+                      const title = t(selectedPost.title_bn, selectedPost.title_en);
+                      window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}&quote=${encodeURIComponent(title)}`, "_blank", "width=600,height=400");
+                    }}
+                    className="p-2 rounded-full bg-muted hover:bg-primary/10 text-muted-foreground hover:text-primary transition-colors"
+                    aria-label="Share on Facebook"
+                  >
+                    <Facebook className="w-4 h-4" />
+                  </button>
+                  <button
+                    onClick={() => {
+                      const title = t(selectedPost.title_bn, selectedPost.title_en);
+                      window.open(`https://wa.me/?text=${encodeURIComponent(title + " " + window.location.href)}`, "_blank");
+                    }}
+                    className="p-2 rounded-full bg-muted hover:bg-accent text-muted-foreground hover:text-accent-foreground transition-colors"
+                    aria-label="Share on WhatsApp"
+                  >
+                    <MessageCircle className="w-4 h-4" />
+                  </button>
+                  <button
+                    onClick={() => {
+                      navigator.clipboard.writeText(window.location.href);
+                      toast.success(t("লিংক কপি হয়েছে!", "Link copied!"));
+                    }}
+                    className="p-2 rounded-full bg-muted hover:bg-primary/10 text-muted-foreground hover:text-primary transition-colors"
+                    aria-label="Copy link"
+                  >
+                    <Link2 className="w-4 h-4" />
+                  </button>
+                </div>
+              )}
             </div>
           </ScrollArea>
         </DialogContent>
