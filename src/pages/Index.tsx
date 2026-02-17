@@ -31,7 +31,11 @@ const DEFAULT_ORDER = ["home", "about", "stats", "services", "portfolio", "testi
 
 const SiteContent = () => {
   const { data: settings } = useSiteSettings();
-  const order = (settings as any)?.section_order || DEFAULT_ORDER;
+  const dbOrder = (settings as any)?.section_order as string[] | undefined;
+  // Merge: keep DB order but ensure all default sections are included
+  const order = dbOrder && dbOrder.length > 0
+    ? [...dbOrder, ...DEFAULT_ORDER.filter((s) => !dbOrder.includes(s))]
+    : DEFAULT_ORDER;
 
   return (
     <>
