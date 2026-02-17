@@ -10,6 +10,15 @@ export const useHeroContent = () =>
     },
   });
 
+export const useHeroIcons = () =>
+  useQuery({
+    queryKey: ["hero_icons"],
+    queryFn: async () => {
+      const { data } = await supabase.from("hero_icons").select("*").order("sort_order");
+      return data ?? [];
+    },
+  });
+
 export const useAboutContent = () =>
   useQuery({
     queryKey: ["about_content"],
