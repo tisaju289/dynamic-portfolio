@@ -112,6 +112,7 @@ export type Database = {
           description_en: string | null
           id: string
           image_url: string | null
+          level: string | null
           link: string | null
           sort_order: number | null
           title: string
@@ -124,6 +125,7 @@ export type Database = {
           description_en?: string | null
           id?: string
           image_url?: string | null
+          level?: string | null
           link?: string | null
           sort_order?: number | null
           title: string
@@ -136,6 +138,7 @@ export type Database = {
           description_en?: string | null
           id?: string
           image_url?: string | null
+          level?: string | null
           link?: string | null
           sort_order?: number | null
           title?: string
