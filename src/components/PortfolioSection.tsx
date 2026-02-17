@@ -1,6 +1,6 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
-import { X } from "lucide-react";
+import { X, ExternalLink } from "lucide-react";
 import { useLang } from "@/context/LanguageContext";
 import { useProjects } from "@/hooks/useSiteContent";
 import alifClothing from "@/assets/portfolio/alif-clothing.png";
@@ -78,6 +78,11 @@ const PortfolioSection = () => {
                 <span className="text-xs font-medium text-primary mb-1 block">{selectedProject.category}</span>
                 <h3 className="text-xl font-bold mb-2">{selectedProject.title}</h3>
                 <p className="text-muted-foreground">{selectedProject.description}</p>
+                {selectedProject.link && (
+                  <a href={selectedProject.link} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 mt-4 gradient-bg text-primary-foreground px-5 py-2.5 rounded-lg font-semibold hover:shadow-lg transition-all text-sm">
+                    <ExternalLink className="w-4 h-4" /> {t("ভিজিট করুন", "Visit")}
+                  </a>
+                )}
               </div>
             </motion.div>
           </motion.div>
