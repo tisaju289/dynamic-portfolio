@@ -10,8 +10,11 @@ import { Plus, Trash2, Pencil } from "lucide-react";
 import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription,
 } from "@/components/ui/dialog";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { DndContext, closestCenter, KeyboardSensor, PointerSensor, useSensor, useSensors, DragEndEvent } from "@dnd-kit/core";
+import { SortableContext, verticalListSortingStrategy, arrayMove } from "@dnd-kit/sortable";
+import SortableItem from "@/components/admin/SortableItem";
 
 const emptyProject = {
   title: "", category: "", description_bn: "", description_en: "",
@@ -23,6 +26,8 @@ const PortfolioEditor = () => {
   const queryClient = useQueryClient();
   const [editing, setEditing] = useState<any | null>(null);
   const [isNew, setIsNew] = useState(false);
+
+  const sensors = useSensors(useSensor(PointerSensor), useSensor(KeyboardSensor));
 
   const openNew = () => { setEditing({ ...emptyProject, sort_order: projects.length }); setIsNew(true); };
   const openEdit = (p: any) => { setEditing({ ...p }); setIsNew(false); };
@@ -51,6 +56,27 @@ const PortfolioEditor = () => {
     toast({ title: "Deleted!" });
   };
 
+  const handleDragEnd = async (event: DragEndEvent) => {
+    const { active, over } = event;
+    if (!over || active.id === over.id) return;
+
+    const oldIndex = projects.findIndex((p: any) => p.id === active.id);
+    const newIndex = projects.findIndex((p: any) => p.id === over.id);
+    const reordered = arrayMove(projects, oldIndex, newIndex);
+
+    // Optimistic update
+    queryClient.setQueryData(["projects"], reordered);
+
+    // Persist new order
+    await Promise.all(
+      reordered.map((p: any, i: number) =>
+        supabase.from("projects").update({ sort_order: i }).eq("id", p.id)
+      )
+    );
+    queryClient.invalidateQueries({ queryKey: ["projects"] });
+    toast({ title: "Order updated!" });
+  };
+
   if (isLoading) return <p>Loading...</p>;
 
   return (
@@ -62,42 +88,47 @@ const PortfolioEditor = () => {
 
       <div className="glass rounded-xl overflow-hidden">
         <div className="overflow-x-auto">
-          <Table>
-            <TableHeader>
+          <table className="w-full caption-bottom text-sm">
+            <thead className="[&_tr]:border-b">
               <TableRow>
+                <TableHead className="w-10"></TableHead>
                 <TableHead>Image</TableHead>
                 <TableHead>Title</TableHead>
                 <TableHead className="hidden sm:table-cell">Category</TableHead>
                 <TableHead className="hidden md:table-cell">Level</TableHead>
                 <TableHead className="text-right">Actions</TableHead>
               </TableRow>
-            </TableHeader>
-            <TableBody>
-              {projects.map((p: any) => (
-                <TableRow key={p.id}>
-                  <TableCell>
-                    {p.image_url ? (
-                      <img src={p.image_url} alt={p.title} className="w-12 h-12 rounded-lg object-cover" />
-                    ) : (
-                      <div className="w-12 h-12 rounded-lg bg-muted" />
-                    )}
-                  </TableCell>
-                  <TableCell className="font-medium max-w-[200px] truncate">{p.title}</TableCell>
-                  <TableCell className="hidden sm:table-cell text-muted-foreground text-xs">{p.category}</TableCell>
-                  <TableCell className="hidden md:table-cell text-muted-foreground text-xs">{p.level}</TableCell>
-                  <TableCell className="text-right">
-                    <div className="flex items-center justify-end gap-1">
-                      <button onClick={() => openEdit(p)} className="p-2 rounded-lg hover:bg-muted transition-colors"><Pencil className="w-4 h-4" /></button>
-                      <button onClick={() => handleDelete(p.id)} className="p-2 rounded-lg text-destructive hover:bg-destructive/10"><Trash2 className="w-4 h-4" /></button>
-                    </div>
-                  </TableCell>
-                </TableRow>
-              ))}
-              {projects.length === 0 && (
-                <TableRow><TableCell colSpan={5} className="text-center text-muted-foreground py-8">No projects yet</TableCell></TableRow>
-              )}
-            </TableBody>
-          </Table>
+            </thead>
+            <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+              <SortableContext items={projects.map((p: any) => p.id)} strategy={verticalListSortingStrategy}>
+                <tbody className="[&_tr:last-child]:border-0">
+                  {projects.map((p: any) => (
+                    <SortableItem key={p.id} id={p.id}>
+                      <TableCell>
+                        {p.image_url ? (
+                          <img src={p.image_url} alt={p.title} className="w-12 h-12 rounded-lg object-cover" />
+                        ) : (
+                          <div className="w-12 h-12 rounded-lg bg-muted" />
+                        )}
+                      </TableCell>
+                      <TableCell className="font-medium max-w-[200px] truncate">{p.title}</TableCell>
+                      <TableCell className="hidden sm:table-cell text-muted-foreground text-xs">{p.category}</TableCell>
+                      <TableCell className="hidden md:table-cell text-muted-foreground text-xs">{p.level}</TableCell>
+                      <TableCell className="text-right">
+                        <div className="flex items-center justify-end gap-1">
+                          <button onClick={() => openEdit(p)} className="p-2 rounded-lg hover:bg-muted transition-colors"><Pencil className="w-4 h-4" /></button>
+                          <button onClick={() => handleDelete(p.id)} className="p-2 rounded-lg text-destructive hover:bg-destructive/10"><Trash2 className="w-4 h-4" /></button>
+                        </div>
+                      </TableCell>
+                    </SortableItem>
+                  ))}
+                  {projects.length === 0 && (
+                    <tr><td colSpan={6} className="text-center text-muted-foreground py-8">No projects yet</td></tr>
+                  )}
+                </tbody>
+              </SortableContext>
+            </DndContext>
+          </table>
         </div>
       </div>
 
