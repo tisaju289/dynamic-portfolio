@@ -262,6 +262,7 @@ export type Database = {
           created_at: string
           description_bn: string | null
           description_en: string | null
+          icon_image_url: string | null
           icon_name: string | null
           id: string
           sort_order: number | null
@@ -272,6 +273,7 @@ export type Database = {
           created_at?: string
           description_bn?: string | null
           description_en?: string | null
+          icon_image_url?: string | null
           icon_name?: string | null
           id?: string
           sort_order?: number | null
@@ -282,6 +284,7 @@ export type Database = {
           created_at?: string
           description_bn?: string | null
           description_en?: string | null
+          icon_image_url?: string | null
           icon_name?: string | null
           id?: string
           sort_order?: number | null
