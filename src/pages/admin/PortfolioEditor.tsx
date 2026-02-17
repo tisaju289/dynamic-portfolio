@@ -43,15 +43,39 @@ const PortfolioEditor = () => {
       </div>
 
       {editing && (
-        <div className="glass rounded-xl p-6 space-y-3 max-w-2xl mb-6">
-          <Input placeholder="Title" value={editing.title} onChange={(e) => setEditing({ ...editing, title: e.target.value })} />
-          <Input placeholder="Category (e.g. Logo, Branding)" value={editing.category} onChange={(e) => setEditing({ ...editing, category: e.target.value })} />
-          <textarea placeholder="Description (Bengali)" value={editing.description_bn} onChange={(e) => setEditing({ ...editing, description_bn: e.target.value })} rows={2} className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm" />
-          <textarea placeholder="Description (English)" value={editing.description_en} onChange={(e) => setEditing({ ...editing, description_en: e.target.value })} rows={2} className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm" />
-          <Input placeholder="Link URL" value={editing.link} onChange={(e) => setEditing({ ...editing, link: e.target.value })} />
-          <Input placeholder="Level (e.g. Beginner, Intermediate, Expert)" value={editing.level || ""} onChange={(e) => setEditing({ ...editing, level: e.target.value })} />
-          <Input type="number" placeholder="Sort order" value={editing.sort_order} onChange={(e) => setEditing({ ...editing, sort_order: parseInt(e.target.value) || 0 })} />
-          <ImageUpload value={editing.image_url} onChange={(url) => setEditing({ ...editing, image_url: url })} folder="portfolio" />
+        <div className="glass rounded-xl p-6 space-y-4 max-w-2xl mb-6">
+          <div>
+            <label className="block text-sm font-medium mb-1">Title</label>
+            <Input placeholder="Project title" value={editing.title} onChange={(e) => setEditing({ ...editing, title: e.target.value })} />
+          </div>
+          <div>
+            <label className="block text-sm font-medium mb-1">Category</label>
+            <Input placeholder="e.g. Logo, Branding" value={editing.category} onChange={(e) => setEditing({ ...editing, category: e.target.value })} />
+          </div>
+          <div>
+            <label className="block text-sm font-medium mb-1">Level</label>
+            <Input placeholder="e.g. Beginner, Intermediate, Expert" value={editing.level || ""} onChange={(e) => setEditing({ ...editing, level: e.target.value })} />
+          </div>
+          <div>
+            <label className="block text-sm font-medium mb-1">Description (Bengali)</label>
+            <textarea placeholder="বাংলায় বিবরণ লিখুন" value={editing.description_bn} onChange={(e) => setEditing({ ...editing, description_bn: e.target.value })} rows={2} className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm" />
+          </div>
+          <div>
+            <label className="block text-sm font-medium mb-1">Description (English)</label>
+            <textarea placeholder="Write description in English" value={editing.description_en} onChange={(e) => setEditing({ ...editing, description_en: e.target.value })} rows={2} className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm" />
+          </div>
+          <div>
+            <label className="block text-sm font-medium mb-1">Link URL</label>
+            <Input placeholder="https://..." value={editing.link} onChange={(e) => setEditing({ ...editing, link: e.target.value })} />
+          </div>
+          <div>
+            <label className="block text-sm font-medium mb-1">Sort Order</label>
+            <Input type="number" placeholder="0" value={editing.sort_order} onChange={(e) => setEditing({ ...editing, sort_order: parseInt(e.target.value) || 0 })} />
+          </div>
+          <div>
+            <label className="block text-sm font-medium mb-1">Image</label>
+            <ImageUpload value={editing.image_url} onChange={(url) => setEditing({ ...editing, image_url: url })} folder="portfolio" />
+          </div>
           <div className="flex gap-2">
             <button onClick={() => handleSave(editing)} className="gradient-bg text-primary-foreground px-4 py-2 rounded-lg text-sm font-medium">Save</button>
             <button onClick={() => setEditing(null)} className="px-4 py-2 rounded-lg text-sm font-medium border border-border hover:bg-muted">Cancel</button>
