@@ -5,8 +5,9 @@ import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import { toast } from "@/hooks/use-toast";
 import { useQueryClient } from "@tanstack/react-query";
-import { Upload, GripVertical } from "lucide-react";
+import { Upload, GripVertical, Check, Palette } from "lucide-react";
 import ImageUpload from "@/components/admin/ImageUpload";
+import { themePresets, fontOptions } from "@/components/DynamicThemeProvider";
 
 const DEFAULT_SECTIONS = ["home", "about", "services", "portfolio", "testimonials", "contact"];
 
@@ -19,6 +20,17 @@ const sectionLabels: Record<string, string> = {
   contact: "Contact",
 };
 
+const presetColors: Record<string, string> = {
+  green: "#2d8f5e",
+  blue: "#3b82f6",
+  purple: "#8b5cf6",
+  red: "#ef4444",
+  orange: "#f97316",
+  pink: "#ec4899",
+  teal: "#14b8a6",
+  indigo: "#6366f1",
+};
+
 const SettingsEditor = () => {
   const { data, isLoading } = useSiteSettings();
   const queryClient = useQueryClient();
@@ -27,6 +39,9 @@ const SettingsEditor = () => {
     section_order: DEFAULT_SECTIONS,
     show_theme_toggle: true,
     show_lang_toggle: true,
+    theme_preset: "green",
+    primary_color: "",
+    font_family: "Noto Sans Bengali",
   });
   const [uploading, setUploading] = useState(false);
   const [dragIdx, setDragIdx] = useState<number | null>(null);
@@ -40,6 +55,9 @@ const SettingsEditor = () => {
       section_order: (data as any).section_order || DEFAULT_SECTIONS,
       show_theme_toggle: (data as any).show_theme_toggle ?? true,
       show_lang_toggle: (data as any).show_lang_toggle ?? true,
+      theme_preset: (data as any).theme_preset || "green",
+      primary_color: (data as any).primary_color || "",
+      font_family: (data as any).font_family || "Noto Sans Bengali",
     });
   }, [data]);
 
@@ -64,6 +82,9 @@ const SettingsEditor = () => {
       section_order: form.section_order,
       show_theme_toggle: form.show_theme_toggle,
       show_lang_toggle: form.show_lang_toggle,
+      theme_preset: form.theme_preset,
+      primary_color: form.primary_color,
+      font_family: form.font_family,
     };
     const op = data?.id
       ? supabase.from("site_settings").update(payload as any).eq("id", data.id)
@@ -121,6 +142,87 @@ const SettingsEditor = () => {
               {uploading ? "Uploading..." : "Upload CV"}
               <input type="file" accept=".pdf,.doc,.docx" onChange={handleCvUpload} className="hidden" disabled={uploading} />
             </label>
+          </div>
+        </div>
+
+        {/* Theme Customization */}
+        <div className="glass rounded-xl p-6 space-y-4">
+          <div className="flex items-center gap-2">
+            <Palette className="w-5 h-5 text-primary" />
+            <h2 className="text-lg font-semibold text-heading">Theme Customization</h2>
+          </div>
+
+          {/* Pre-made Themes */}
+          <div>
+            <label className="block text-sm font-medium mb-2">Theme Preset</label>
+            <div className="grid grid-cols-4 gap-2">
+              {Object.entries(presetColors).map(([name, color]) => (
+                <button
+                  key={name}
+                  onClick={() => setForm({ ...form, theme_preset: name, primary_color: "" })}
+                  className={`relative flex flex-col items-center gap-1.5 p-3 rounded-lg border-2 transition-all ${
+                    form.theme_preset === name && !form.primary_color
+                      ? "border-foreground shadow-md"
+                      : "border-border hover:border-muted-foreground"
+                  }`}
+                >
+                  <div
+                    className="w-8 h-8 rounded-full shadow-inner"
+                    style={{ backgroundColor: color }}
+                  />
+                  {form.theme_preset === name && !form.primary_color && (
+                    <div className="absolute top-1 right-1">
+                      <Check className="w-3.5 h-3.5 text-foreground" />
+                    </div>
+                  )}
+                  <span className="text-xs capitalize font-medium">{name}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Custom Color */}
+          <div>
+            <label className="block text-sm font-medium mb-1">Custom Primary Color</label>
+            <div className="flex items-center gap-3">
+              <input
+                type="color"
+                value={form.primary_color || presetColors[form.theme_preset] || "#2d8f5e"}
+                onChange={(e) => setForm({ ...form, primary_color: e.target.value })}
+                className="w-10 h-10 rounded-lg border border-border cursor-pointer"
+              />
+              <Input
+                value={form.primary_color}
+                onChange={(e) => setForm({ ...form, primary_color: e.target.value })}
+                placeholder="e.g. #3b82f6 (leave empty for preset)"
+                className="flex-1"
+              />
+              {form.primary_color && (
+                <button
+                  onClick={() => setForm({ ...form, primary_color: "" })}
+                  className="text-xs text-muted-foreground hover:text-foreground px-2 py-1 rounded border border-border"
+                >
+                  Reset
+                </button>
+              )}
+            </div>
+          </div>
+
+          {/* Font Selection */}
+          <div>
+            <label className="block text-sm font-medium mb-1">Font Family</label>
+            <select
+              value={form.font_family}
+              onChange={(e) => setForm({ ...form, font_family: e.target.value })}
+              className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm"
+            >
+              {Object.keys(fontOptions).map((font) => (
+                <option key={font} value={font}>{font}</option>
+              ))}
+            </select>
+            <p className="text-xs text-muted-foreground mt-1" style={{ fontFamily: fontOptions[form.font_family] }}>
+              Preview: The quick brown fox jumps — দ্রুত বাদামী শিয়াল লাফ দেয়
+            </p>
           </div>
         </div>
 
