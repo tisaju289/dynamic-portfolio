@@ -1,7 +1,9 @@
-import { Home, User, Briefcase, FolderOpen, MessageSquare, Mail, Share2, Settings, LogOut, BarChart3, FileText, Menu } from "lucide-react";
+import { Home, User, Briefcase, FolderOpen, MessageSquare, Mail, Share2, Settings, LogOut, BarChart3, FileText, Menu, ExternalLink } from "lucide-react";
 import { NavLink, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { useSiteSettings } from "@/hooks/useSiteContent";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { useState, useEffect } from "react";
 
@@ -19,7 +21,7 @@ const links = [
   { to: "/admin/settings", icon: Settings, label: "Settings" },
 ];
 
-const SidebarNav = ({ onNavigate }: { onNavigate?: () => void }) => {
+const SidebarNav = ({ onNavigate, username }: { onNavigate?: () => void; username?: string }) => {
   const { signOut } = useAuth();
   const navigate = useNavigate();
 
@@ -28,8 +30,22 @@ const SidebarNav = ({ onNavigate }: { onNavigate?: () => void }) => {
     navigate("/admin/login");
   };
 
+  const visitUrl = username ? `/${username}` : "/";
+
   return (
     <>
+      {/* Visit Site button */}
+      <div className="px-4 pt-4">
+        <a
+          href={visitUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center justify-center gap-2 w-full px-3 py-2.5 rounded-lg text-sm font-medium bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
+        >
+          <ExternalLink className="w-4 h-4" />
+          Visit Site
+        </a>
+      </div>
       <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
         {links.map((link) => (
           <NavLink
@@ -65,8 +81,19 @@ const SidebarNav = ({ onNavigate }: { onNavigate?: () => void }) => {
 
 const AdminSidebar = () => {
   const { data: settings } = useSiteSettings();
+  const { user } = useAuth();
   const [open, setOpen] = useState(false);
   const location = useLocation();
+
+  const { data: profile } = useQuery({
+    queryKey: ["admin_profile", user?.id],
+    queryFn: async () => {
+      if (!user?.id) return null;
+      const { data } = await supabase.from("profiles").select("username").eq("user_id", user.id).single();
+      return data;
+    },
+    enabled: !!user?.id,
+  });
 
   // Close sheet on route change
   useEffect(() => {
@@ -88,7 +115,7 @@ const AdminSidebar = () => {
               <SheetTitle className="text-lg font-bold text-heading text-left">Admin Panel</SheetTitle>
               <p className="text-xs text-muted-foreground">{settings?.site_name || "MK Kopil"} Portfolio</p>
             </SheetHeader>
-            <SidebarNav onNavigate={() => setOpen(false)} />
+            <SidebarNav onNavigate={() => setOpen(false)} username={profile?.username} />
           </SheetContent>
         </Sheet>
         <h2 className="text-sm font-bold text-heading">Admin Panel</h2>
@@ -100,7 +127,7 @@ const AdminSidebar = () => {
           <h2 className="text-lg font-bold text-heading">Admin Panel</h2>
           <p className="text-xs text-muted-foreground mt-1">{settings?.site_name || "MK Kopil"} Portfolio</p>
         </div>
-        <SidebarNav />
+        <SidebarNav username={profile?.username} />
       </aside>
     </>
   );

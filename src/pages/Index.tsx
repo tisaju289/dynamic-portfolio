@@ -17,6 +17,9 @@ import WhatsAppButton from "@/components/WhatsAppButton";
 import BackToTop from "@/components/BackToTop";
 import Preloader from "@/components/Preloader";
 import { useSiteSettings, useProfileByUsername } from "@/hooks/useSiteContent";
+import { useAuth } from "@/hooks/useAuth";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
 
 const sectionComponents: Record<string, React.FC> = {
   home: HeroSection,
@@ -69,11 +72,25 @@ const PortfolioSite = ({ userId, username }: { userId: string; username: string 
 const DEMO_USER_ID = "d79f99e7-f381-45e6-9896-a5f3f4fbe4eb";
 const DEMO_USERNAME = "sajufeni";
 
+const useProfileByUserId = (userId: string | undefined) =>
+  useQuery({
+    queryKey: ["profile_by_uid", userId],
+    queryFn: async () => {
+      if (!userId) return null;
+      const { data } = await supabase.from("profiles").select("*").eq("user_id", userId).single();
+      return data;
+    },
+    enabled: !!userId,
+  });
+
 const Index = () => {
   const { username } = useParams<{ username: string }>();
+  const { user } = useAuth();
 
-  // If no username, show the demo portfolio
-  const resolvedUsername = username || DEMO_USERNAME;
+  // If root URL and user is logged in, show their portfolio
+  const { data: ownProfile } = useProfileByUserId(!username ? user?.id : undefined);
+
+  const resolvedUsername = username || ownProfile?.username || DEMO_USERNAME;
   const { data: profile, isLoading, isError } = useProfileByUsername(resolvedUsername);
 
   if (isLoading) {
@@ -85,7 +102,6 @@ const Index = () => {
   }
 
   if (isError || !profile) {
-    // For root path, fallback to hardcoded demo user
     if (!username) {
       return <PortfolioSite userId={DEMO_USER_ID} username={DEMO_USERNAME} />;
     }
