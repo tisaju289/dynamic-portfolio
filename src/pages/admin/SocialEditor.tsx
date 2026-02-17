@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { toast } from "@/hooks/use-toast";
 import { useQueryClient } from "@tanstack/react-query";
 import { Plus, Trash2, icons } from "lucide-react";
+import { useAuth } from "@/hooks/useAuth";
 
 // Map common social platform names to Lucide icon names
 const platformIconMap: Record<string, string> = {
@@ -36,6 +37,7 @@ const resolveIcon = (platform: string) => {
 const SocialEditor = () => {
   const { data: links = [], isLoading } = useSocialLinks();
   const queryClient = useQueryClient();
+  const { user } = useAuth();
   const [editing, setEditing] = useState<any>(null);
 
   const handlePlatformChange = (value: string) => {
@@ -45,7 +47,7 @@ const SocialEditor = () => {
   const handleSave = async (item: any) => {
     const icon = item.icon_name || resolveIcon(item.platform);
     const payload = { platform: item.platform, url: item.url, icon_name: icon, sort_order: item.sort_order || 0 };
-    const op = item.id ? supabase.from("social_links").update(payload).eq("id", item.id) : supabase.from("social_links").insert(payload);
+    const op = item.id ? supabase.from("social_links").update(payload).eq("id", item.id) : supabase.from("social_links").insert({ ...payload, user_id: user?.id });
     const { error } = await op;
     if (error) { toast({ title: "Error", description: error.message, variant: "destructive" }); return; }
     queryClient.invalidateQueries({ queryKey: ["social_links"] });

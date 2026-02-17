@@ -7,6 +7,7 @@ import { toast } from "@/hooks/use-toast";
 import { useQueryClient } from "@tanstack/react-query";
 import { Palette, Layers, Share2, Printer, PenTool, Image, Monitor, Smartphone, Globe, Brush, Camera, Type, Code, Zap, Star, Heart, Award, Target, TrendingUp, Trash2, Plus, Upload, Save } from "lucide-react";
 import TranslateButton from "@/components/admin/TranslateButton";
+import { useAuth } from "@/hooks/useAuth";
 
 const availableIcons: Record<string, any> = {
   Palette, Layers, Share2, Printer, PenTool, Image, Monitor, Smartphone, Globe, Brush, Camera, Type, Code, Zap, Star, Heart, Award, Target, TrendingUp
@@ -47,6 +48,7 @@ const AboutEditor = () => {
   const { data, isLoading } = useAboutContent();
   const { data: skills, isLoading: skillsLoading } = useSkills();
   const queryClient = useQueryClient();
+  const { user } = useAuth();
   const [form, setForm] = useState({ title_bn: "", title_en: "", description_bn: "", description_en: "" });
   const [localSkills, setLocalSkills] = useState<any[]>([]);
   const [dirtySkills, setDirtySkills] = useState<Set<string>>(new Set());
@@ -65,7 +67,7 @@ const AboutEditor = () => {
   const handleSave = async () => {
     const op = data?.id
       ? supabase.from("about_content").update(form).eq("id", data.id)
-      : supabase.from("about_content").insert(form);
+      : supabase.from("about_content").insert({ ...form, user_id: user?.id });
     const { error } = await op;
     if (error) { toast({ title: "Error", description: error.message, variant: "destructive" }); return; }
     queryClient.invalidateQueries({ queryKey: ["about_content"] });
@@ -92,7 +94,7 @@ const AboutEditor = () => {
 
   const addSkill = async () => {
     const maxOrder = localSkills.length ? Math.max(...localSkills.map((s) => s.sort_order || 0)) + 1 : 0;
-    const { error } = await supabase.from("skills").insert({ title: "New Skill", icon_name: "Palette", description_bn: "", description_en: "", sort_order: maxOrder });
+    const { error } = await supabase.from("skills").insert({ title: "New Skill", icon_name: "Palette", description_bn: "", description_en: "", sort_order: maxOrder, user_id: user?.id });
     if (error) { toast({ title: "Error", description: error.message, variant: "destructive" }); return; }
     queryClient.invalidateQueries({ queryKey: ["skills"] });
   };

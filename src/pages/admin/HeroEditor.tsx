@@ -7,11 +7,13 @@ import { toast } from "@/hooks/use-toast";
 import { useQueryClient } from "@tanstack/react-query";
 import { Plus, Trash2 } from "lucide-react";
 import TranslateButton from "@/components/admin/TranslateButton";
+import { useAuth } from "@/hooks/useAuth";
 
 const HeroEditor = () => {
   const { data, isLoading } = useHeroContent();
   const { data: heroIcons = [] } = useHeroIcons();
   const queryClient = useQueryClient();
+  const { user } = useAuth();
   const [form, setForm] = useState({
     name: "", subtitle_bn: "", subtitle_en: "",
     roles_bn: "", roles_en: "", image_url: "",
@@ -45,7 +47,7 @@ const HeroEditor = () => {
       const { error } = await supabase.from("hero_content").update(payload).eq("id", data.id);
       if (error) { toast({ title: "Error", description: error.message, variant: "destructive" }); return; }
     } else {
-      const { error } = await supabase.from("hero_content").insert(payload);
+      const { error } = await supabase.from("hero_content").insert({ ...payload, user_id: user?.id });
       if (error) { toast({ title: "Error", description: error.message, variant: "destructive" }); return; }
     }
     queryClient.invalidateQueries({ queryKey: ["hero_content"] });
@@ -56,7 +58,7 @@ const HeroEditor = () => {
     const payload = { image_url: item.image_url, label: item.label, sort_order: item.sort_order || 0 };
     const op = item.id
       ? supabase.from("hero_icons").update(payload as any).eq("id", item.id)
-      : supabase.from("hero_icons").insert(payload as any);
+      : supabase.from("hero_icons").insert({ ...payload, user_id: user?.id } as any);
     const { error } = await op;
     if (error) { toast({ title: "Error", description: error.message, variant: "destructive" }); return; }
     queryClient.invalidateQueries({ queryKey: ["hero_icons"] });

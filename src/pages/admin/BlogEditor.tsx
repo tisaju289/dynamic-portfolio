@@ -9,6 +9,7 @@ import { Trash2, Plus, Eye, EyeOff, Pencil } from "lucide-react";
 import TranslateButton from "@/components/admin/TranslateButton";
 import ImageUpload from "@/components/admin/ImageUpload";
 import RichTextEditor from "@/components/admin/RichTextEditor";
+import { useAuth } from "@/hooks/useAuth";
 import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription,
 } from "@/components/ui/dialog";
@@ -27,6 +28,7 @@ const emptyPost = {
 const BlogEditor = () => {
   const { data: posts = [], isLoading } = useBlogPosts(true);
   const queryClient = useQueryClient();
+  const { user } = useAuth();
   const [editing, setEditing] = useState<any | null>(null);
   const [isNew, setIsNew] = useState(false);
 
@@ -46,7 +48,7 @@ const BlogEditor = () => {
       is_published: editing.is_published,
     };
     const op = isNew
-      ? supabase.from("blog_posts").insert(payload)
+      ? supabase.from("blog_posts").insert({ ...payload, user_id: user?.id })
       : supabase.from("blog_posts").update(payload).eq("id", editing.id);
     const { error } = await op;
     if (error) { toast({ title: "Error", description: error.message, variant: "destructive" }); return; }

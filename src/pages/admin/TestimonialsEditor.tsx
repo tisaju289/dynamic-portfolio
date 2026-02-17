@@ -6,15 +6,17 @@ import { toast } from "@/hooks/use-toast";
 import { useQueryClient } from "@tanstack/react-query";
 import { Plus, Trash2, Star } from "lucide-react";
 import TranslateButton from "@/components/admin/TranslateButton";
+import { useAuth } from "@/hooks/useAuth";
 
 const TestimonialsEditor = () => {
   const { data: testimonials = [], isLoading } = useTestimonials();
   const queryClient = useQueryClient();
+  const { user } = useAuth();
   const [editing, setEditing] = useState<any>(null);
 
   const handleSave = async (item: any) => {
     const payload = { name_bn: item.name_bn, name_en: item.name_en, role_bn: item.role_bn, role_en: item.role_en, text_bn: item.text_bn, text_en: item.text_en, rating: item.rating || 5, sort_order: item.sort_order || 0 };
-    const op = item.id ? supabase.from("testimonials").update(payload).eq("id", item.id) : supabase.from("testimonials").insert(payload);
+    const op = item.id ? supabase.from("testimonials").update(payload).eq("id", item.id) : supabase.from("testimonials").insert({ ...payload, user_id: user?.id });
     const { error } = await op;
     if (error) { toast({ title: "Error", description: error.message, variant: "destructive" }); return; }
     queryClient.invalidateQueries({ queryKey: ["testimonials"] });

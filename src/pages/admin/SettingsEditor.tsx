@@ -8,6 +8,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { Upload, GripVertical, Check, Palette } from "lucide-react";
 import ImageUpload from "@/components/admin/ImageUpload";
 import { themePresets, fontOptions } from "@/components/DynamicThemeProvider";
+import { useAuth } from "@/hooks/useAuth";
 
 const DEFAULT_SECTIONS = ["home", "about", "stats", "services", "portfolio", "testimonials", "blog", "contact"];
 
@@ -36,6 +37,7 @@ const presetColors: Record<string, string> = {
 const SettingsEditor = () => {
   const { data, isLoading } = useSiteSettings();
   const queryClient = useQueryClient();
+  const { user } = useAuth();
   const [form, setForm] = useState({
     site_name: "", whatsapp_number: "", cv_url: "", logo_url: "",
     section_order: DEFAULT_SECTIONS,
@@ -95,7 +97,7 @@ const SettingsEditor = () => {
     };
     const op = data?.id
       ? supabase.from("site_settings").update(payload as any).eq("id", data.id)
-      : supabase.from("site_settings").insert(payload as any);
+      : supabase.from("site_settings").insert({ ...payload, user_id: user?.id } as any);
     const { error } = await op;
     if (error) { toast({ title: "Error", description: error.message, variant: "destructive" }); return; }
     queryClient.invalidateQueries({ queryKey: ["site_settings"] });
