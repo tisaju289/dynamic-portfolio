@@ -9,18 +9,39 @@ import ContactSection from "@/components/ContactSection";
 import Footer from "@/components/Footer";
 import ScrollProgress from "@/components/ScrollProgress";
 import WhatsAppButton from "@/components/WhatsAppButton";
+import { useSiteSettings } from "@/hooks/useSiteContent";
+
+const sectionComponents: Record<string, React.FC> = {
+  home: HeroSection,
+  about: AboutSection,
+  services: ServicesSection,
+  portfolio: PortfolioSection,
+  testimonials: TestimonialsSection,
+  contact: ContactSection,
+};
+
+const DEFAULT_ORDER = ["home", "about", "services", "portfolio", "testimonials", "contact"];
+
+const SiteContent = () => {
+  const { data: settings } = useSiteSettings();
+  const order = (settings as any)?.section_order || DEFAULT_ORDER;
+
+  return (
+    <>
+      {order.map((key: string) => {
+        const Comp = sectionComponents[key];
+        return Comp ? <Comp key={key} /> : null;
+      })}
+    </>
+  );
+};
 
 const Index = () => (
   <LanguageProvider>
     <main className="min-h-screen">
       <ScrollProgress />
       <Navbar />
-      <HeroSection />
-      <AboutSection />
-      <ServicesSection />
-      <PortfolioSection />
-      <TestimonialsSection />
-      <ContactSection />
+      <SiteContent />
       <Footer />
       <WhatsAppButton />
     </main>

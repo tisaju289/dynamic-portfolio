@@ -82,15 +82,17 @@ const Navbar = () => {
         </ul>
 
         <div className="flex items-center gap-1">
-          <button
-            onClick={toggleLang}
-            className="flex items-center gap-1 px-2 py-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted transition-colors duration-200 text-xs font-semibold"
-            aria-label="Toggle language"
-          >
-            <Globe className="w-4 h-4" />
-            {lang === "bn" ? "EN" : "বাং"}
-          </button>
-          <ThemeToggle />
+          {((settings as any)?.show_lang_toggle ?? true) && (
+            <button
+              onClick={toggleLang}
+              className="flex items-center gap-1 px-2 py-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted transition-colors duration-200 text-xs font-semibold"
+              aria-label="Toggle language"
+            >
+              <Globe className="w-4 h-4" />
+              {lang === "bn" ? "EN" : "বাং"}
+            </button>
+          )}
+          {((settings as any)?.show_theme_toggle ?? true) && <ThemeToggle />}
           {/* Mobile toggle */}
           <button
             className="md:hidden p-2 text-foreground"

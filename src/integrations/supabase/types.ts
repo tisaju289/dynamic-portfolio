@@ -182,6 +182,9 @@ export type Database = {
           cv_url: string | null
           id: string
           logo_url: string | null
+          section_order: string[] | null
+          show_lang_toggle: boolean | null
+          show_theme_toggle: boolean | null
           site_name: string | null
           updated_at: string
           whatsapp_number: string | null
@@ -191,6 +194,9 @@ export type Database = {
           cv_url?: string | null
           id?: string
           logo_url?: string | null
+          section_order?: string[] | null
+          show_lang_toggle?: boolean | null
+          show_theme_toggle?: boolean | null
           site_name?: string | null
           updated_at?: string
           whatsapp_number?: string | null
@@ -200,6 +206,9 @@ export type Database = {
           cv_url?: string | null
           id?: string
           logo_url?: string | null
+          section_order?: string[] | null
+          show_lang_toggle?: boolean | null
+          show_theme_toggle?: boolean | null
           site_name?: string | null
           updated_at?: string
           whatsapp_number?: string | null
