@@ -16,6 +16,7 @@ import ScrollProgress from "@/components/ScrollProgress";
 import WhatsAppButton from "@/components/WhatsAppButton";
 import BackToTop from "@/components/BackToTop";
 import Preloader from "@/components/Preloader";
+import DynamicHead from "@/components/DynamicHead";
 import { useSiteSettings, useProfileByUsername } from "@/hooks/useSiteContent";
 import { useAuth } from "@/hooks/useAuth";
 import { useQuery } from "@tanstack/react-query";
@@ -55,6 +56,7 @@ const PortfolioSite = ({ userId, username }: { userId: string; username: string 
   <PortfolioProvider userId={userId} username={username}>
     <LanguageProvider>
       <DynamicThemeProvider>
+        <DynamicHead />
         <Preloader />
         <main className="min-h-screen">
           <ScrollProgress />

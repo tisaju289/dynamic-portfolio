@@ -5,7 +5,8 @@ import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import { toast } from "@/hooks/use-toast";
 import { useQueryClient } from "@tanstack/react-query";
-import { Upload, GripVertical, Check, Palette } from "lucide-react";
+import { Upload, GripVertical, Check, Palette, Search } from "lucide-react";
+import { Textarea } from "@/components/ui/textarea";
 import ImageUpload from "@/components/admin/ImageUpload";
 import { themePresets, fontOptions } from "@/components/DynamicThemeProvider";
 import { useAuth } from "@/hooks/useAuth";
@@ -46,6 +47,10 @@ const SettingsEditor = () => {
     theme_preset: "green",
     primary_color: "",
     font_family: "Noto Sans Bengali",
+    meta_title: "",
+    meta_description: "",
+    favicon_url: "",
+    og_image_url: "",
   });
   const [uploading, setUploading] = useState(false);
   const [dragIdx, setDragIdx] = useState<number | null>(null);
@@ -66,6 +71,10 @@ const SettingsEditor = () => {
         theme_preset: (data as any).theme_preset || "green",
         primary_color: (data as any).primary_color || "",
         font_family: (data as any).font_family || "Noto Sans Bengali",
+        meta_title: (data as any).meta_title || "",
+        meta_description: (data as any).meta_description || "",
+        favicon_url: (data as any).favicon_url || "",
+        og_image_url: (data as any).og_image_url || "",
       });
     }
   }, [data]);
@@ -94,6 +103,10 @@ const SettingsEditor = () => {
       theme_preset: form.theme_preset,
       primary_color: form.primary_color,
       font_family: form.font_family,
+      meta_title: form.meta_title,
+      meta_description: form.meta_description,
+      favicon_url: form.favicon_url,
+      og_image_url: form.og_image_url,
     };
     const op = data?.id
       ? supabase.from("site_settings").update(payload as any).eq("id", data.id)
@@ -232,6 +245,34 @@ const SettingsEditor = () => {
             <p className="text-xs text-muted-foreground mt-1" style={{ fontFamily: fontOptions[form.font_family] }}>
               Preview: The quick brown fox jumps — দ্রুত বাদামী শিয়াল লাফ দেয়
             </p>
+          </div>
+        </div>
+
+        {/* SEO Settings */}
+        <div className="glass rounded-xl p-6 space-y-4">
+          <div className="flex items-center gap-2">
+            <Search className="w-5 h-5 text-primary" />
+            <h2 className="text-lg font-semibold text-heading">SEO & Meta Tags</h2>
+          </div>
+          <div>
+            <label className="block text-sm font-medium mb-1">Meta Title</label>
+            <Input value={form.meta_title} onChange={(e) => setForm({ ...form, meta_title: e.target.value })} placeholder="Page title for search engines (max 60 chars)" maxLength={60} />
+            <p className="text-xs text-muted-foreground mt-1">{form.meta_title.length}/60 characters</p>
+          </div>
+          <div>
+            <label className="block text-sm font-medium mb-1">Meta Description</label>
+            <Textarea value={form.meta_description} onChange={(e) => setForm({ ...form, meta_description: e.target.value })} placeholder="Page description for search engines (max 160 chars)" maxLength={160} rows={3} />
+            <p className="text-xs text-muted-foreground mt-1">{form.meta_description.length}/160 characters</p>
+          </div>
+          <div>
+            <label className="block text-sm font-medium mb-1">Favicon</label>
+            <ImageUpload value={form.favicon_url} onChange={(url) => setForm({ ...form, favicon_url: url })} folder="favicon" />
+            <p className="text-xs text-muted-foreground mt-1">Recommended: 32×32 or 64×64 PNG/ICO</p>
+          </div>
+          <div>
+            <label className="block text-sm font-medium mb-1">OG Image (Social Share)</label>
+            <ImageUpload value={form.og_image_url} onChange={(url) => setForm({ ...form, og_image_url: url })} folder="og" />
+            <p className="text-xs text-muted-foreground mt-1">Recommended: 1200×630px — Facebook, Twitter, LinkedIn এ শেয়ার করলে এই ছবি দেখাবে</p>
           </div>
         </div>
 

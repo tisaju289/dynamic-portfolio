@@ -309,9 +309,13 @@ export type Database = {
         Row: {
           created_at: string
           cv_url: string | null
+          favicon_url: string | null
           font_family: string | null
           id: string
           logo_url: string | null
+          meta_description: string | null
+          meta_title: string | null
+          og_image_url: string | null
           primary_color: string | null
           section_order: string[] | null
           show_lang_toggle: boolean | null
@@ -325,9 +329,13 @@ export type Database = {
         Insert: {
           created_at?: string
           cv_url?: string | null
+          favicon_url?: string | null
           font_family?: string | null
           id?: string
           logo_url?: string | null
+          meta_description?: string | null
+          meta_title?: string | null
+          og_image_url?: string | null
           primary_color?: string | null
           section_order?: string[] | null
           show_lang_toggle?: boolean | null
@@ -341,9 +349,13 @@ export type Database = {
         Update: {
           created_at?: string
           cv_url?: string | null
+          favicon_url?: string | null
           font_family?: string | null
           id?: string
           logo_url?: string | null
+          meta_description?: string | null
+          meta_title?: string | null
+          og_image_url?: string | null
           primary_color?: string | null
           section_order?: string[] | null
           show_lang_toggle?: boolean | null
