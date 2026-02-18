@@ -1,15 +1,45 @@
 import { motion, AnimatePresence } from "framer-motion";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { Download } from "lucide-react";
 import heroImage from "@/assets/mk-kopil.png";
 import { useLang } from "@/context/LanguageContext";
 import { useHeroContent, useSiteSettings, useHeroIcons } from "@/hooks/useSiteContent";
+
+const useAutoFitText = () => {
+  const containerRef = useRef<HTMLSpanElement>(null);
+  
+  const fitText = useCallback(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    const parent = el.parentElement;
+    if (!parent) return;
+    
+    el.style.fontSize = '';
+    const parentWidth = parent.clientWidth;
+    const scrollWidth = el.scrollWidth;
+    
+    if (scrollWidth > parentWidth) {
+      const scale = parentWidth / scrollWidth;
+      const currentSize = parseFloat(getComputedStyle(el).fontSize);
+      el.style.fontSize = `${Math.floor(currentSize * scale * 0.95)}px`;
+    }
+  }, []);
+
+  useEffect(() => {
+    fitText();
+    window.addEventListener('resize', fitText);
+    return () => window.removeEventListener('resize', fitText);
+  }, [fitText]);
+
+  return { containerRef, fitText };
+};
 
 const HeroSection = () => {
   const { t } = useLang();
   const { data: hero } = useHeroContent();
   const { data: settings } = useSiteSettings();
   const { data: heroIcons = [] } = useHeroIcons();
+  const { containerRef, fitText } = useAutoFitText();
   const [roleIndex, setRoleIndex] = useState(0);
 
   const defaultRolesBn = ["গ্রাফিক্স ডিজাইনার", "লোগো ডিজাইনার", "ব্র্যান্ড এক্সপার্ট", "ক্রিয়েটিভ আর্টিস্ট"];
@@ -20,6 +50,9 @@ const HeroSection = () => {
   const roles = t(rolesBn.join("||"), rolesEn.join("||")).split("||");
 
   const name = hero?.name || "MK Kopil";
+
+  // Re-fit when name changes
+  useEffect(() => { fitText(); }, [name, fitText]);
   const imgSrc = hero?.image_url || heroImage;
   const cvUrl = settings?.cv_url || "/mk-kopil-cv.pdf";
 
@@ -57,8 +90,8 @@ const HeroSection = () => {
             transition={{ duration: 0.6, ease: "easeOut" }}
             className="order-2 lg:order-1 flex flex-col items-center"
           >
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold leading-tight mb-6">
-              <span className="whitespace-nowrap">
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold leading-tight mb-6 w-full">
+              <span ref={containerRef} className="whitespace-nowrap inline-block max-w-full">
                 {hero?.subtitle_bn || hero?.subtitle_en
                   ? t(hero.subtitle_bn || "", hero.subtitle_en || "")
                   : <>{t("আমি", "I'm")} </>}
