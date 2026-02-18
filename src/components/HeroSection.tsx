@@ -58,11 +58,13 @@ const HeroSection = () => {
             className="order-2 lg:order-1 flex flex-col items-center"
           >
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold leading-tight mb-6">
-              {hero?.subtitle_bn || hero?.subtitle_en
-                ? t(hero.subtitle_bn || "", hero.subtitle_en || "")
-                : <>{t("আমি", "I'm")} </>}
-              {" "}
-              <span className="gradient-text">{name}</span>
+              <span className="whitespace-nowrap">
+                {hero?.subtitle_bn || hero?.subtitle_en
+                  ? t(hero.subtitle_bn || "", hero.subtitle_en || "")
+                  : <>{t("আমি", "I'm")} </>}
+                {" "}
+                <span className="gradient-text">{name}</span>
+              </span>
               <br />
               {t("একজন পেশাদার", "A Professional")}{" "}
               <span className="relative inline-block min-w-[200px] md:min-w-[280px]">
