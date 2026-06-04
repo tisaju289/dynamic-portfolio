@@ -198,7 +198,11 @@ router.use("/testimonials", makeSimpleRoutes(testimonialsTable));
 
 // ---- Contact Messages ----
 router.get("/contact_messages/:userId", requireAuth, async (req: any, res) => {
-  const rows = await db.select().from(contactMessagesTable).where(eq(contactMessagesTable.userId, req.params.userId)).orderBy(contactMessagesTable.createdAt);
+  // Only allow authenticated user to read their own messages (prevent IDOR)
+  if (req.params.userId !== req.userId) {
+    return res.status(403).json({ error: "Forbidden" });
+  }
+  const rows = await db.select().from(contactMessagesTable).where(eq(contactMessagesTable.userId, req.userId)).orderBy(contactMessagesTable.createdAt);
   return sj(res, rows);
 });
 
@@ -263,24 +267,6 @@ router.post("/upload/request-url", requireAuth, async (req: any, res) => {
     res.json({ uploadURL, objectPath });
   } catch (e: any) {
     res.status(500).json({ error: e.message });
-  }
-});
-
-// ---- Serve uploaded objects ----
-router.get("/objects/:objectPath", async (req: any, res) => {
-  try {
-    const { ObjectStorageService } = await import("../lib/objectStorage");
-    const svc = new ObjectStorageService();
-    const rawPath = "/objects/" + req.params.objectPath;
-    const file = await svc.getObjectEntityFile(rawPath);
-    const response = await svc.downloadObject(file);
-    const headers = Object.fromEntries(response.headers.entries());
-    Object.entries(headers).forEach(([k, v]) => res.setHeader(k, v as string));
-    res.status(response.status);
-    const { Readable } = await import("stream");
-    Readable.fromWeb(response.body as any).pipe(res);
-  } catch (e: any) {
-    res.status(404).json({ error: "Not found" });
   }
 });
 

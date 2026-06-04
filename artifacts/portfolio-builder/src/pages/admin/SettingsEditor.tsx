@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useSiteSettings } from "@/hooks/useSiteContent";
 import { supabase } from "@/integrations/supabase/client";
 import { Input } from "@/components/ui/input";
+// supabase import above is kept for the site_settings save (shim routes to /api)
 import { Switch } from "@/components/ui/switch";
 import { toast } from "@/hooks/use-toast";
 import { useQueryClient } from "@tanstack/react-query";
@@ -84,12 +85,27 @@ const SettingsEditor = () => {
     const file = e.target.files?.[0];
     if (!file) return;
     setUploading(true);
-    const path = `cv/${Date.now()}-${file.name}`;
-    const { error } = await supabase.storage.from("portfolio-assets").upload(path, file);
-    if (error) { toast({ title: "Upload failed", description: error.message, variant: "destructive" }); setUploading(false); return; }
-    const { data: { publicUrl } } = supabase.storage.from("portfolio-assets").getPublicUrl(path);
-    setForm({ ...form, cv_url: publicUrl });
-    setUploading(false);
+    try {
+      const res = await fetch("/api/upload/request-url", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name: file.name, size: file.size, contentType: file.type }),
+        credentials: "include",
+      });
+      if (!res.ok) throw new Error("Failed to get upload URL");
+      const { uploadURL, objectPath } = await res.json();
+      const uploadRes = await fetch(uploadURL, {
+        method: "PUT",
+        body: file,
+        headers: { "Content-Type": file.type },
+      });
+      if (!uploadRes.ok) throw new Error("Upload failed");
+      setForm((prev) => ({ ...prev, cv_url: `/api${objectPath}` }));
+    } catch (err: any) {
+      toast({ title: "Upload failed", description: err.message, variant: "destructive" });
+    } finally {
+      setUploading(false);
+    }
   };
 
   const handleSave = async () => {
