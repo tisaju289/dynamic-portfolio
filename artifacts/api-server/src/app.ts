@@ -55,10 +55,27 @@ app.use(
 app.use("/api/objects", async (req: Request, res: Response) => {
   try {
     const { ObjectStorageService, ObjectNotFoundError } = await import("./lib/objectStorage");
+    const { getObjectAclPolicy, ObjectPermission } = await import("./lib/objectAcl");
     const svc = new ObjectStorageService();
     // req.path gives the remainder after /api/objects, e.g. /uploads/<uuid>
     const rawPath = "/objects" + req.path;
     const file = await svc.getObjectEntityFile(rawPath);
+
+    // Enforce ACL if one is set on the object.
+    // If no ACL is stored (most portfolio uploads), the object is served publicly —
+    // consistent with the portfolio use case where all uploads are public media.
+    const aclPolicy = await getObjectAclPolicy(file);
+    if (aclPolicy) {
+      const isPublic = aclPolicy.visibility === "public";
+      if (!isPublic) {
+        // For private objects, require the caller to be the owner
+        const callerUserId = (req as any).auth?.userId;
+        if (!callerUserId || callerUserId !== aclPolicy.owner) {
+          return res.status(403).json({ error: "Forbidden" });
+        }
+      }
+    }
+
     const response = await svc.downloadObject(file);
     const headers = Object.fromEntries(response.headers.entries());
     Object.entries(headers).forEach(([k, v]) => res.setHeader(k, v as string));

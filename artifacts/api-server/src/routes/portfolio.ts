@@ -249,10 +249,12 @@ router.get("/stats/:userId", async (req, res) => {
 router.use("/stats", makeSimpleRoutes(statsTable));
 
 // ---- Blog Posts ----
-router.get("/blog_posts/:userId", async (req, res) => {
-  const includeUnpublished = req.query.all === "true";
+router.get("/blog_posts/:userId", async (req: any, res) => {
+  const requestingDrafts = req.query.all === "true";
+  // Only the authenticated owner can request drafts; everyone else gets published only
+  const isOwner = requestingDrafts && req.auth?.userId === req.params.userId;
   let rows = await db.select().from(blogPostsTable).where(eq(blogPostsTable.userId, req.params.userId)).orderBy(blogPostsTable.createdAt);
-  if (!includeUnpublished) rows = rows.filter((r: any) => r.isPublished);
+  if (!isOwner) rows = rows.filter((r: any) => r.isPublished);
   return sj(res, rows);
 });
 router.use("/blog_posts", makeSimpleRoutes(blogPostsTable));
