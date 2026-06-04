@@ -1,0 +1,44 @@
+import { icons } from "lucide-react";
+import { useLang } from "@/context/LanguageContext";
+import { useSocialLinks, useSiteSettings } from "@/hooks/useSiteContent";
+
+const getIcon = (name: string) => {
+  return (icons as Record<string, any>)[name]
+    || (icons as Record<string, any>)[name.charAt(0).toUpperCase() + name.slice(1).toLowerCase()]
+    || (icons as Record<string, any>)["Globe"];
+};
+
+const Footer = () => {
+  const { t } = useLang();
+  const { data: dbLinks } = useSocialLinks();
+  const { data: settings } = useSiteSettings();
+
+  const links = dbLinks && dbLinks.length > 0
+    ? dbLinks.map((l: any) => ({ icon: getIcon(l.icon_name || "Globe"), label: l.platform, href: l.url }))
+    : [{ icon: icons.Facebook, label: "Facebook", href: "#" }, { icon: icons.Mail, label: "Email", href: "#" }];
+
+  return (
+    <footer className="py-12 border-t border-border">
+      <div className="container mx-auto px-4 text-center">
+        <a href="#home" className="text-2xl font-bold gradient-text inline-flex items-center justify-center gap-2 mb-6">
+          {(settings as any)?.logo_url && <img src={(settings as any).logo_url} alt="Logo" className="w-8 h-8 object-contain rounded" />}
+          {settings?.site_name || "MK Kopil"}
+        </a>
+        <div className="flex justify-center gap-4 mb-6">
+          {links.map((s: any) => {
+            const IconComp = s.icon;
+            return (
+              <a key={s.label} href={s.href} target={s.href?.startsWith("http") ? "_blank" : undefined} rel={s.href?.startsWith("http") ? "noopener noreferrer" : undefined} aria-label={s.label} className="w-10 h-10 rounded-full bg-muted flex items-center justify-center text-muted-foreground hover:gradient-bg hover:text-primary-foreground transition-all duration-200">
+                <IconComp className="w-5 h-5" />
+              </a>
+            );
+          })}
+        </div>
+        <p className="text-muted-foreground text-sm">© 2026 MK Kopil | {t("সর্বস্বত্ব সংরক্ষিত", "All Rights Reserved")}</p>
+        <p className="text-muted-foreground text-xs mt-3">{t("ডেভেলপ করেছেন", "Developed by")} <a href="https://tisaju.com" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">Tajul Islam Saju</a></p>
+      </div>
+    </footer>
+  );
+};
+
+export default Footer;

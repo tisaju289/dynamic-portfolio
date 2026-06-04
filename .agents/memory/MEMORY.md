@@ -1,0 +1,1 @@
+- [Portfolio Builder migration](portfolio-migration.md) — Supabase-to-Replit migration: shim pattern, snake/camel serialization, Clerk auth, object storage setup.
