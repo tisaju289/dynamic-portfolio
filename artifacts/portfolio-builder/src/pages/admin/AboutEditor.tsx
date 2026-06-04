@@ -19,13 +19,27 @@ const SkillIconDropZone = ({ skillId, onUploaded }: { skillId: string; onUploade
 
   const uploadFile = async (file: File) => {
     setUploading(true);
-    const ext = file.name.split(".").pop();
-    const path = `skill-icons/${skillId}-${Date.now()}.${ext}`;
-    const { error } = await supabase.storage.from("portfolio-assets").upload(path, file);
-    if (error) { toast({ title: "Upload failed", description: error.message, variant: "destructive" }); setUploading(false); return; }
-    const { data: { publicUrl } } = supabase.storage.from("portfolio-assets").getPublicUrl(path);
-    onUploaded(publicUrl);
-    setUploading(false);
+    try {
+      const res = await fetch("/api/upload/request-url", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name: file.name, size: file.size, contentType: file.type }),
+        credentials: "include",
+      });
+      if (!res.ok) throw new Error("Failed to get upload URL");
+      const { uploadURL, objectPath } = await res.json();
+      const uploadRes = await fetch(uploadURL, {
+        method: "PUT",
+        body: file,
+        headers: { "Content-Type": file.type },
+      });
+      if (!uploadRes.ok) throw new Error("Upload failed");
+      onUploaded(`/api${objectPath}`);
+    } catch (err: any) {
+      toast({ title: "Upload failed", description: err.message, variant: "destructive" });
+    } finally {
+      setUploading(false);
+    }
   };
 
   return (
